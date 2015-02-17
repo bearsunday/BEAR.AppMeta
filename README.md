@@ -1,5 +1,8 @@
 # BEAR.AppMeta
 
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/BEARSunday/BEAR.AppMeta/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/BEARSunday/BEAR.AppMeta/?branch=master)
+[![Build Status](https://travis-ci.org/BEARSunday/BEAR.AppMeta.svg?branch=master)](https://travis-ci.org/BEARSunday/BEAR.AppMeta)
+
 BEAR.Sunday application meta information object
 
 ```php
