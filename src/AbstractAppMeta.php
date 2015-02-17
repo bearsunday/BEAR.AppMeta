@@ -29,4 +29,11 @@ abstract class AbstractAppMeta
      * @var string
      */
     public $logDir;
+
+    /**
+     * Return resource list generator
+     *
+     * @return \Generator
+     */
+    abstract public function getResourceListGenerator();
 }
