@@ -1,0 +1,30 @@
+{
+    "name": "bear/appmeta",
+    "description":" ",
+    "keywords":[
+    ],
+    "license": "BSD-3-Clause",
+    "autoload":{
+        "psr-4":{
+            "BEAR\\AppMeta\\": "src/"
+        }
+    },
+    "autoload-dev":{
+        "psr-4":{
+            "BEAR\\AppMeta\\": "tests/",
+            "BEAR\\AppMeta\\": "tests/Fake",
+            "FakeVendor\\HelloWorld\\": "tests/Fake/fake-app/src"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "extra": {
+        "branch-alias": {
+            "dev-develop": "0.1.x-dev"
+        }
+    },
+    "require": {
+        "koriym/psr4list": "~1.0@dev",
+        "bear/resource": "~1.0@dev"
+    }
+}

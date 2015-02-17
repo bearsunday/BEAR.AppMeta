@@ -1,0 +1,75 @@
+[12-Feb-2015 03:49:04 Europe/Zurich]  
+[12-Feb-2015 03:49:04 Europe/Zurich] exception 'RuntimeException' with message 'message' in /Users/kooriyama/git/BEAR.Package/tests/Provide/Error/VndErrorTest.php:49
+Stack trace:
+#0 [internal function]: BEAR\Package\Provide\Error\VndErrorTest->testServerErrorNot50X()
+#1 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(881): ReflectionMethod->invokeArgs(Object(BEAR\Package\Provide\Error\VndErrorTest), Array)
+#2 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(766): PHPUnit_Framework_TestCase->runTest()
+#3 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestResult.php(643): PHPUnit_Framework_TestCase->runBare()
+#4 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(722): PHPUnit_Framework_TestResult->run(Object(BEAR\Package\Provide\Error\VndErrorTest))
+#5 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestSuite.php(751): PHPUnit_Framework_TestCase->run(Object(PHPUnit_Framework_TestResult))
+#6 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestSuite.php(751): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#7 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(423): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#8 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/Command.php(186): PHPUnit_TextUI_TestRunner->doRun(Object(PHPUnit_Framework_TestSuite), Array)
+#9 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/Command.php(138): PHPUnit_TextUI_Command->run(Array, true)
+#10 /Users/kooriyama/.composer/vendor/phpunit/phpunit/phpunit(62): PHPUnit_TextUI_Command::main()
+#11 {main}
+[12-Feb-2015 07:08:32 Europe/Zurich]  
+[12-Feb-2015 07:08:32 Europe/Zurich] exception 'RuntimeException' with message 'message' in /Users/kooriyama/git/BEAR.Package/tests/Provide/Error/VndErrorTest.php:49
+Stack trace:
+#0 [internal function]: BEAR\Package\Provide\Error\VndErrorTest->testServerErrorNot50X()
+#1 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestCase.php(905): ReflectionMethod->invokeArgs(Object(BEAR\Package\Provide\Error\VndErrorTest), Array)
+#2 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestCase.php(775): PHPUnit_Framework_TestCase->runTest()
+#3 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestResult.php(643): PHPUnit_Framework_TestCase->runBare()
+#4 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestCase.php(711): PHPUnit_Framework_TestResult->run(Object(BEAR\Package\Provide\Error\VndErrorTest))
+#5 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestSuite.php(751): PHPUnit_Framework_TestCase->run(Object(PHPUnit_Framework_TestResult))
+#6 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestSuite.php(751): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#7 phar:///usr/local/bin/phpunit.phar/phpunit/TextUI/TestRunner.php(423): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#8 phar:///usr/local/bin/phpunit.phar/phpunit/TextUI/Command.php(186): PHPUnit_TextUI_TestRunner->doRun(Object(PHPUnit_Framework_TestSuite), Array)
+#9 /private/var/folders/w8/h7zy96qs329gwmmyfr4cv57sj20zzs/T/ide-phpunit.php(258): PHPUnit_TextUI_Command->run(Array, true)
+#10 /private/var/folders/w8/h7zy96qs329gwmmyfr4cv57sj20zzs/T/ide-phpunit.php(516): IDE_Base_PHPUnit_TextUI_Command::main()
+#11 {main}
+[12-Feb-2015 10:51:27 Europe/Zurich]  
+[12-Feb-2015 10:51:27 Europe/Zurich] exception 'RuntimeException' with message 'message' in /Users/kooriyama/git/BEAR.Package/tests/Provide/Error/VndErrorTest.php:49
+Stack trace:
+#0 [internal function]: BEAR\Package\Provide\Error\VndErrorTest->testServerErrorNot50X()
+#1 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(860): ReflectionMethod->invokeArgs(Object(BEAR\Package\Provide\Error\VndErrorTest), Array)
+#2 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(737): PHPUnit_Framework_TestCase->runTest()
+#3 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestResult.php(609): PHPUnit_Framework_TestCase->runBare()
+#4 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(693): PHPUnit_Framework_TestResult->run(Object(BEAR\Package\Provide\Error\VndErrorTest))
+#5 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestSuite.php(716): PHPUnit_Framework_TestCase->run(Object(PHPUnit_Framework_TestResult))
+#6 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestSuite.php(716): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#7 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(398): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#8 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/Command.php(152): PHPUnit_TextUI_TestRunner->doRun(Object(PHPUnit_Framework_TestSuite), Array)
+#9 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/Command.php(104): PHPUnit_TextUI_Command->run(Array, true)
+#10 /Users/kooriyama/.composer/vendor/phpunit/phpunit/phpunit(36): PHPUnit_TextUI_Command::main()
+#11 {main}
+[12-Feb-2015 10:51:38 Europe/Zurich]  
+[12-Feb-2015 10:51:38 Europe/Zurich] exception 'RuntimeException' with message 'message' in /Users/kooriyama/git/BEAR.Package/tests/Provide/Error/VndErrorTest.php:49
+Stack trace:
+#0 [internal function]: BEAR\Package\Provide\Error\VndErrorTest->testServerErrorNot50X()
+#1 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(860): ReflectionMethod->invokeArgs(Object(BEAR\Package\Provide\Error\VndErrorTest), Array)
+#2 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(737): PHPUnit_Framework_TestCase->runTest()
+#3 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestResult.php(609): PHPUnit_Framework_TestCase->runBare()
+#4 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestCase.php(693): PHPUnit_Framework_TestResult->run(Object(BEAR\Package\Provide\Error\VndErrorTest))
+#5 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestSuite.php(716): PHPUnit_Framework_TestCase->run(Object(PHPUnit_Framework_TestResult))
+#6 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/Framework/TestSuite.php(716): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#7 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/TestRunner.php(398): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#8 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/Command.php(152): PHPUnit_TextUI_TestRunner->doRun(Object(PHPUnit_Framework_TestSuite), Array)
+#9 /Users/kooriyama/.composer/vendor/phpunit/phpunit/src/TextUI/Command.php(104): PHPUnit_TextUI_Command->run(Array, true)
+#10 /Users/kooriyama/.composer/vendor/phpunit/phpunit/phpunit(36): PHPUnit_TextUI_Command::main()
+#11 {main}
+[16-Feb-2015 11:54:42 Europe/Zurich]  
+[16-Feb-2015 11:54:42 Europe/Zurich] exception 'RuntimeException' with message 'message' in /Users/kooriyama/git/BEAR.Package/tests/Provide/Error/VndErrorTest.php:49
+Stack trace:
+#0 [internal function]: BEAR\Package\Provide\Error\VndErrorTest->testServerErrorNot50X()
+#1 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestCase.php(905): ReflectionMethod->invokeArgs(Object(BEAR\Package\Provide\Error\VndErrorTest), Array)
+#2 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestCase.php(775): PHPUnit_Framework_TestCase->runTest()
+#3 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestResult.php(643): PHPUnit_Framework_TestCase->runBare()
+#4 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestCase.php(711): PHPUnit_Framework_TestResult->run(Object(BEAR\Package\Provide\Error\VndErrorTest))
+#5 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestSuite.php(751): PHPUnit_Framework_TestCase->run(Object(PHPUnit_Framework_TestResult))
+#6 phar:///usr/local/bin/phpunit.phar/phpunit/Framework/TestSuite.php(751): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#7 phar:///usr/local/bin/phpunit.phar/phpunit/TextUI/TestRunner.php(423): PHPUnit_Framework_TestSuite->run(Object(PHPUnit_Framework_TestResult))
+#8 phar:///usr/local/bin/phpunit.phar/phpunit/TextUI/Command.php(186): PHPUnit_TextUI_TestRunner->doRun(Object(PHPUnit_Framework_TestSuite), Array)
+#9 /private/var/folders/w8/h7zy96qs329gwmmyfr4cv57sj20zzs/T/ide-phpunit.php(258): PHPUnit_TextUI_Command->run(Array, true)
+#10 /private/var/folders/w8/h7zy96qs329gwmmyfr4cv57sj20zzs/T/ide-phpunit.php(516): IDE_Base_PHPUnit_TextUI_Command::main()
+#11 {main}
