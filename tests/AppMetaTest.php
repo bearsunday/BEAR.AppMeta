@@ -9,18 +9,19 @@ class AppMetaTest extends \PHPUnit_Framework_TestCase
     /**
      * @var AppMeta
      */
-    protected $skeleton;
+    protected $appMeta;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->skeleton = new AppMeta('FakeVendor\HelloWorld');
+        $this->appMeta = new AppMeta('FakeVendor\HelloWorld', 'prod-app');
     }
 
     public function testNew()
     {
-        $actual = $this->skeleton;
+        $actual = $this->appMeta;
         $this->assertInstanceOf('\BEAR\AppMeta\AppMeta', $actual);
+        $this->assertFileExists($this->appMeta->tmpDir);
     }
 
     public function testAppReflectorResourceList()
