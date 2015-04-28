@@ -15,8 +15,8 @@ class AppMeta extends AbstractAppMeta
     /**
      * Application meta
      *
-     * @param string $name Application name{$Vendor\$Package}
-     * @param string $contexts
+     * @param string $name     application name {Vendor\Package}
+     * @param string $contexts application context
      */
     public function __construct($name, $contexts = '')
     {
@@ -60,14 +60,19 @@ class AppMeta extends AbstractAppMeta
             }
         };
         $unlink($dir);
-        if (! is_writable($this->tmpDir)) {
-            throw new NotWritableException($this->tmpDir);
-        }
-        if (! is_writable($this->logDir)) {
-            throw new NotWritableException($this->logDir);
-        }
         if (function_exists('apc_clear_cache')) {
             apc_clear_cache('user');
+        }
+        $this->checkWritable();
+    }
+
+    private function checkWritable()
+    {
+        if (!is_writable($this->tmpDir)) {
+            throw new NotWritableException($this->tmpDir);
+        }
+        if (!is_writable($this->logDir)) {
+            throw new NotWritableException($this->logDir);
         }
     }
 }
