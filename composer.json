@@ -4,7 +4,7 @@
     "keywords":[
         "BEARSunday"
     ],
-    "license": "BSD-3-Clause",
+    "license": "MIT",
     "autoload":{
         "psr-4":{
             "BEAR\\AppMeta\\": "src/"
@@ -18,11 +18,6 @@
         }
     },
     "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-develop": "0.1.x-dev"
-        }
-    },
     "require": {
         "koriym/psr4list": "~1.0@dev",
         "bear/resource": "~1.0@dev"
