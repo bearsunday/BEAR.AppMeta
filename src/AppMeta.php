@@ -67,12 +67,15 @@ class AppMeta extends AbstractAppMeta
         $this->checkWritable();
     }
 
+    /**
+     * @codeCoverageIgnore*
+     */
     private function checkWritable()
     {
-        if (!is_writable($this->tmpDir)) {
+        if (! is_writable($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
         }
-        if (!is_writable($this->logDir)) {
+        if (! is_writable($this->logDir)) {
             throw new NotWritableException($this->logDir);
         }
     }
