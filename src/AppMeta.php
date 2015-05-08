@@ -34,6 +34,7 @@ class AppMeta extends AbstractAppMeta
         $isNotProd = strpos($contexts, 'prod') === false;
         if ($isNotProd) {
             $this->initForDevelop($this->tmpDir);
+            ini_set('error_log', $this->logDir . "/app.{$contexts}.log");
         }
     }
 
