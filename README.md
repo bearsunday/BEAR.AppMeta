@@ -1,8 +1,8 @@
 # BEAR.AppMeta
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/?branch=master)
-[![Build Status](https://travis-ci.org/bearsunday/BEAR.AppMeta.svg?branch=master)](https://travis-ci.org/bearsunday/BEAR.AppMeta)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/badges/quality-score.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/?branch=1.x)
+[![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/badges/coverage.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/?branch=1.x)
+[![Build Status](https://travis-ci.org/bearsunday/BEAR.AppMeta.svg?branch=1.x)](https://travis-ci.org/bearsunday/BEAR.AppMeta)
 
 BEAR.Sunday application meta information object
 

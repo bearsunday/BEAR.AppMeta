@@ -14,6 +14,8 @@ class AppMetaTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
+        $app = dirname(__DIR__) . '/tests/Fake/fake-app/var/tmp';
+        file_put_contents($app . '/app/cache', '1');
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld', 'prod-app');
     }
 
@@ -54,5 +56,11 @@ class AppMetaTest extends \PHPUnit_Framework_TestCase
     {
         $this->setExpectedException(AppNameException::class);
         new AppMeta('Invalid\Invalid');
+    }
+
+    public function testDev()
+    {
+        new AppMeta('FakeVendor\HelloWorld', 'app');
+        new AppMeta('FakeVendor\HelloWorld', 'app-' . uniqid());
     }
 }

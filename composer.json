@@ -2,7 +2,7 @@
     "name": "bear/app-meta",
     "description":"BEAR.Sunday application meta information",
     "keywords":[
-        "BEARSunday"
+        "BEAR.Sunday"
     ],
     "license": "MIT",
     "autoload":{
@@ -17,9 +17,10 @@
             "FakeVendor\\HelloWorld\\": "tests/Fake/fake-app/src"
         }
     },
-    "minimum-stability": "dev",
     "require": {
-        "koriym/psr4list": "~1.0@dev",
-        "bear/resource": "~1.0@dev"
+        "koriym/psr4list": "~1.0"
+    },
+    "require-dev": {
+      "bear/resource": "~1.0"
     }
 }
