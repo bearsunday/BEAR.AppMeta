@@ -13,28 +13,26 @@ use Koriym\Psr4List\Psr4List;
 class AppMeta extends AbstractAppMeta
 {
     /**
-     * Application meta
-     *
-     * @param string $name     application name {Vendor\Package}
-     * @param string $contexts application context
+     * @param string $name    application application name    (Vendor.Package)
+     * @param string $context application application context (prod-hal-app)
      */
-    public function __construct($name, $contexts = '')
+    public function __construct($name, $context = 'app')
     {
         $appModule = $name . '\Module\AppModule';
         if (! class_exists($appModule)) {
             throw new AppNameException($name);
         }
         $this->name = $name;
-        $this->appDir = $this->appDir ?: dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
-        $this->tmpDir = $this->appDir . '/var/tmp/'. $contexts;
+        $this->appDir = dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
+        $this->tmpDir = $this->appDir . '/var/tmp/'. $context;
         if (! file_exists($this->tmpDir)) {
             mkdir($this->tmpDir);
         }
         $this->logDir = $this->appDir . '/var/log';
-        $isNotProd = strpos($contexts, 'prod') === false;
-        if ($isNotProd && $contexts) {
+        $isNotProd = strpos($context, 'prod') === false;
+        if ($isNotProd && $context) {
             $this->initForDevelop($this->tmpDir);
-            ini_set('error_log', $this->logDir . "/app.{$contexts}.log");
+            ini_set('error_log', $this->logDir . "/app.{$context}.log");
         }
     }
 
