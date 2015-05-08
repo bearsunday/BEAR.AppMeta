@@ -25,7 +25,7 @@ class AppMeta extends AbstractAppMeta
             throw new AppNameException($name);
         }
         $this->name = $name;
-        $this->appDir = dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
+        $this->appDir = $this->appDir ?: dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
         $this->tmpDir = $this->appDir . '/var/tmp/'. $contexts;
         if (! file_exists($this->tmpDir)) {
             mkdir($this->tmpDir);
@@ -34,6 +34,7 @@ class AppMeta extends AbstractAppMeta
         $isNotProd = strpos($contexts, 'prod') === false;
         if ($isNotProd && $contexts) {
             $this->initForDevelop($this->tmpDir);
+            ini_set('error_log', $this->logDir . "/app.{$contexts}.log");
         }
     }
 
