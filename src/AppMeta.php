@@ -30,7 +30,7 @@ class AppMeta extends AbstractAppMeta
         }
         $this->logDir = $this->appDir . '/var/log';
         $isNotProd = strpos($context, 'prod') === false;
-        if ($isNotProd && $context) {
+        if ($isNotProd) {
             $this->initForDevelop($this->tmpDir);
             ini_set('error_log', $this->logDir . "/app.{$context}.log");
         }
