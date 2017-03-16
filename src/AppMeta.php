@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is part of the BEAR.AppMeta.
+ * This file is part of the BEAR.Sunday package.
  *
  * @license http://opensource.org/licenses/MIT MIT
  */
@@ -24,8 +24,8 @@ class AppMeta extends AbstractAppMeta
             throw new AppNameException($name);
         }
         $this->name = $name;
-        $this->appDir = $appDir ?? dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
-        $this->tmpDir = $this->appDir . '/var/tmp/'. $context;
+        $this->appDir = $appDir ? $appDir : dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
+        $this->tmpDir = $this->appDir . '/var/tmp/' . $context;
         if (! file_exists($this->tmpDir) && mkdir($this->tmpDir) && ! is_writable($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
         }
