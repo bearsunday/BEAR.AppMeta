@@ -21,6 +21,7 @@
         "koriym/psr4list": "~1.0"
     },
     "require-dev": {
-        "bear/resource": "~1.0"
+        "bear/resource": "~1.0",
+        "phpunit/phpunit": "^5.7"
     }
 }
