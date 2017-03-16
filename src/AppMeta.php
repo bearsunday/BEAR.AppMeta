@@ -25,15 +25,10 @@ class AppMeta extends AbstractAppMeta
         $this->name = $name;
         $this->appDir = dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
         $this->tmpDir = $this->appDir . '/var/tmp/'. $context;
-        if (! file_exists($this->tmpDir)) {
-            mkdir($this->tmpDir);
+        if (! file_exists($this->tmpDir) && mkdir($this->tmpDir) && ! is_writable($this->tmpDir)) {
+            throw new NotWritableException($this->tmpDir);
         }
         $this->logDir = $this->appDir . '/var/log';
-        $isNotProd = strpos($context, 'prod') === false;
-        if ($isNotProd) {
-            $this->initForDevelop($this->tmpDir);
-            ini_set('error_log', $this->logDir . "/app.{$context}.log");
-        }
     }
 
     /**
@@ -45,36 +40,5 @@ class AppMeta extends AbstractAppMeta
         $resourceListGenerator = $list($this->name . '\Resource', $this->appDir . '/src/Resource');
 
         return $resourceListGenerator;
-    }
-
-    /**
-     * @param string $dir
-     */
-    private function initForDevelop($dir)
-    {
-        $unlink = function ($path) use (&$unlink) {
-            foreach (glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
-                is_dir($file) ? $unlink($file) : unlink($file);
-                @rmdir($file);
-            }
-        };
-        $unlink($dir);
-        if (function_exists('apc_clear_cache')) {
-            apc_clear_cache('user');
-        }
-        $this->checkWritable();
-    }
-
-    /**
-     * @codeCoverageIgnore*
-     */
-    private function checkWritable()
-    {
-        if (! is_writable($this->tmpDir)) {
-            throw new NotWritableException($this->tmpDir);
-        }
-        if (! is_writable($this->logDir)) {
-            throw new NotWritableException($this->logDir);
-        }
     }
 }
