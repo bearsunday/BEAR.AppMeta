@@ -13,8 +13,9 @@ use Koriym\Psr4List\Psr4List;
 class AppMeta extends AbstractAppMeta
 {
     /**
-     * @param string $name    application application name    (Vendor.Package)
-     * @param string $context application application context (prod-hal-app)
+     * @param string $name    application name    (Vendor\Project)
+     * @param string $context application context (prod-hal-app)
+     * @param string $appDir  application directory
      */
     public function __construct($name, $context = 'app', $appDir = null)
     {
