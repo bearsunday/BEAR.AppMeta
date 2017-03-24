@@ -30,6 +30,10 @@ class AppMeta extends AbstractAppMeta
             throw new NotWritableException($this->tmpDir);
         }
         $this->logDir = $this->appDir . '/var/log';
+        $isDevelop = strpos($context, 'prod') === false;
+        if ($isDevelop) {
+            $this->clearTmpDirectory($this->tmpDir);
+        }
     }
 
     /**
@@ -41,5 +45,28 @@ class AppMeta extends AbstractAppMeta
         $resourceListGenerator = $list($this->name . '\Resource', $this->appDir . '/src/Resource');
 
         return $resourceListGenerator;
+    }
+
+    /**
+     * @param string $dir
+     */
+    private function clearTmpDirectory($dir)
+    {
+        /**
+         *  A flag for clear once because called many times during the unit testing
+         */
+        static $done = false;
+
+        if ($done) {
+            return;
+        }
+        $unlink = function ($path) use (&$unlink) {
+            foreach (glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
+                is_dir($file) ? $unlink($file) : unlink($file);
+                @rmdir($file);
+            }
+        };
+        $unlink($dir);
+        $done = true;
     }
 }
