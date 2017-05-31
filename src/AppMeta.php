@@ -60,7 +60,7 @@ class AppMeta extends AbstractAppMeta
          */
         static $done = false;
 
-        if ($done) {
+        if ($done || file_exists($dir . '/.do_not_clear')) {
             return;
         }
         $unlink = function ($path) use (&$unlink) {
