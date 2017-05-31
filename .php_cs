@@ -1,7 +1,7 @@
 <?php
 
 $header = <<<'EOF'
-This file is part of the BEAR.Sunday package.
+This file is part of the BEAR.AppMeta package.
 
 @license http://opensource.org/licenses/MIT MIT
 EOF;
@@ -25,12 +25,12 @@ return \PhpCsFixer\Config::create()
         'dir_constant' => true,
         'ereg_to_preg' => true,
         'function_typehint_space' => true,
-        'general_phpdoc_annotation_remove' => ['author', 'category', 'package', 'copyright', 'version'],
+        'general_phpdoc_annotation_remove' => true,
         'hash_to_slash_comment' => true,
         'heredoc_to_nowdoc' => true,
         'include' => true,
         'indentation_type' => true,
-//        'is_null' => ['use_yoda_style' => false],
+        'is_null' => ['use_yoda_style' => false],
         'linebreak_after_opening_tag' => true,
         'lowercase_cast' => true,
 //        'mb_str_functions' => true,
@@ -125,5 +125,5 @@ return \PhpCsFixer\Config::create()
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->exclude('tests/Fake')
-            ->in('src')
+            ->in(__DIR__)
     )->setLineEnding("\n");
