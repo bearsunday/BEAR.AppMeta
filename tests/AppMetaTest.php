@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * This file is part of the BEAR.AppMeta package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\AppMeta;
 
 use PHPUnit\Framework\TestCase;
@@ -39,7 +43,7 @@ class AppMetaTest extends TestCase
             'FakeVendor\HelloWorld\Resource\App\User',
             'FakeVendor\HelloWorld\Resource\Page\Index',
             'FakeVendor\HelloWorld\Resource\App\Sub\Three',
-            'FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four'        ];
+            'FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four'];
         $this->assertSame($expect, $classes);
         $expect = [
             $appMeta->appDir . '/src/Resource/App/One.php',
