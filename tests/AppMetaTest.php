@@ -64,9 +64,10 @@ class AppMetaTest extends TestCase
         new AppMeta('Invalid\Invalid');
     }
 
-    public function testDev()
+    public function testVarTmpFolderCreation()
     {
-        new AppMeta('FakeVendor\HelloWorld', 'app');
-        new AppMeta('FakeVendor\HelloWorld', 'app-' . uniqid());
+        new AppMeta('FakeVendor\HelloWorld', 'stage-app');
+        $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/log/stage-app');
+        $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/stage-app');
     }
 }
