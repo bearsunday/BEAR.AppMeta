@@ -2,9 +2,9 @@
 
 namespace BEAR\AppMeta;
 
-use BEAR\AppMeta\Exception\AppNameException;
+use PHPUnit\Framework\TestCase;
 
-class AppMetaTest extends \PHPUnit_Framework_TestCase
+class AppMetaTest extends TestCase
 {
     /**
      * @var AppMeta
@@ -52,9 +52,11 @@ class AppMetaTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expect, $files);
     }
 
+    /**
+     * @expectedException \BEAR\AppMeta\Exception\AppNameException
+     */
     public function testInvalidName()
     {
-        $this->setExpectedException(AppNameException::class);
         new AppMeta('Invalid\Invalid');
     }
 

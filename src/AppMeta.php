@@ -29,7 +29,10 @@ class AppMeta extends AbstractAppMeta
         if (! file_exists($this->tmpDir) && mkdir($this->tmpDir) && ! is_writable($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
         }
-        $this->logDir = $this->appDir . '/var/log';
+        $this->logDir = $this->appDir . '/var/log/' . $context;
+        if (! file_exists($this->logDir) && mkdir($this->logDir) && ! is_writable($this->logDir)) {
+            throw new NotWritableException($this->logDir);
+        }
         $isDevelop = strpos($context, 'prod') === false;
         if ($isDevelop) {
             $this->clearTmpDirectory($this->tmpDir);
@@ -57,7 +60,7 @@ class AppMeta extends AbstractAppMeta
          */
         static $done = false;
 
-        if ($done) {
+        if ($done || file_exists($dir . '/.do_not_clear')) {
             return;
         }
         $unlink = function ($path) use (&$unlink) {
