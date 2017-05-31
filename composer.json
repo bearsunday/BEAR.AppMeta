@@ -12,8 +12,7 @@
     },
     "autoload-dev":{
         "psr-4":{
-            "BEAR\\AppMeta\\": "tests/",
-            "BEAR\\AppMeta\\": "tests/Fake",
+            "BEAR\\AppMeta\\": ["tests/", "tests/Fake"],
             "FakeVendor\\HelloWorld\\": "tests/Fake/fake-app/src"
         }
     },
@@ -22,6 +21,6 @@
     },
     "require-dev": {
         "bear/resource": "~1.0",
-        "phpunit/phpunit": "^5.7"
+        "phpunit/phpunit": "^5.7 || ^6.0"
     }
 }
