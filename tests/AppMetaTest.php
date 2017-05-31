@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * This file is part of the BEAR.AppMeta package.
+ *
+ * @license http://opensource.org/licenses/MIT MIT
+ */
 namespace BEAR\AppMeta;
 
 use PHPUnit\Framework\TestCase;
@@ -39,7 +43,7 @@ class AppMetaTest extends TestCase
             'FakeVendor\HelloWorld\Resource\App\User',
             'FakeVendor\HelloWorld\Resource\Page\Index',
             'FakeVendor\HelloWorld\Resource\App\Sub\Three',
-            'FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four'        ];
+            'FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four'];
         $this->assertSame($expect, $classes);
         $expect = [
             $appMeta->appDir . '/src/Resource/App/One.php',
@@ -60,9 +64,10 @@ class AppMetaTest extends TestCase
         new AppMeta('Invalid\Invalid');
     }
 
-    public function testDev()
+    public function testVarTmpFolderCreation()
     {
-        new AppMeta('FakeVendor\HelloWorld', 'app');
-        new AppMeta('FakeVendor\HelloWorld', 'app-' . uniqid());
+        new AppMeta('FakeVendor\HelloWorld', 'stage-app');
+        $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/log/stage-app');
+        $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/stage-app');
     }
 }
