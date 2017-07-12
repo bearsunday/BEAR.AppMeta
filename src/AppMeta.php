@@ -60,7 +60,7 @@ class AppMeta extends AbstractAppMeta
          */
         static $cleanUpFlg = [];
 
-        if (in_array($dir, $cleanUpFlg) || file_exists($dir . '/.do_not_clear')) {
+        if (in_array($dir, $cleanUpFlg, true) || file_exists($dir . '/.do_not_clear')) {
             return;
         }
         $unlink = function ($path) use (&$unlink) {
