@@ -58,9 +58,9 @@ class AppMeta extends AbstractAppMeta
         /**
          *  A flag for clear once because called many times during the unit testing
          */
-        static $done = false;
+        static $cleanUpFlg = [];
 
-        if ($done || file_exists($dir . '/.do_not_clear')) {
+        if (in_array($dir, $cleanUpFlg, true) || file_exists($dir . '/.do_not_clear')) {
             return;
         }
         $unlink = function ($path) use (&$unlink) {
@@ -70,6 +70,6 @@ class AppMeta extends AbstractAppMeta
             }
         };
         $unlink($dir);
-        $done = true;
+        $cleanUpFlg[] = $dir;
     }
 }
