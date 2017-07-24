@@ -33,8 +33,8 @@ class AppMeta extends AbstractAppMeta
         if (! file_exists($this->logDir) && mkdir($this->logDir) && ! is_writable($this->logDir)) {
             throw new NotWritableException($this->logDir);
         }
-        $isDevelop = strpos($context, 'prod') === false;
-        if ($isDevelop) {
+        $isCacheable = is_int(strpos($context, 'prod-')) || is_int(strpos($context, 'stage-'));
+        if (! $isCacheable) {
             $this->clearTmpDirectory($this->tmpDir);
         }
     }
