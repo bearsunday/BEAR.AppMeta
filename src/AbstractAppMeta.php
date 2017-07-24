@@ -6,6 +6,8 @@
  */
 namespace BEAR\AppMeta;
 
+use Koriym\Psr4List\Psr4List;
+
 abstract class AbstractAppMeta
 {
     /**
@@ -31,9 +33,13 @@ abstract class AbstractAppMeta
     public $logDir;
 
     /**
-     * Return resource list generator
-     *
      * @return \Generator
      */
-    abstract public function getResourceListGenerator();
+    public function getResourceListGenerator()
+    {
+        $list = new Psr4List();
+        $resourceListGenerator = $list($this->name . '\Resource', $this->appDir . '/src/Resource');
+
+        return $resourceListGenerator;
+    }
 }
