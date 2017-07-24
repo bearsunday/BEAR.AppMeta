@@ -44,7 +44,7 @@ class AppMeta extends AbstractAppMeta
     private function clearTmpDirectory($dir)
     {
         /**
-         *  A flag for clear once because called many times during the unit testing
+         * A flag for not deleting tmp directories many times with single request
          */
         static $cleanUpFlg = [];
 
