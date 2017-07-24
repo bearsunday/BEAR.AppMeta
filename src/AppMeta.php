@@ -8,7 +8,6 @@ namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
-use Koriym\Psr4List\Psr4List;
 
 class AppMeta extends AbstractAppMeta
 {
@@ -40,23 +39,12 @@ class AppMeta extends AbstractAppMeta
     }
 
     /**
-     * @return \Generator
-     */
-    public function getResourceListGenerator()
-    {
-        $list = new Psr4List;
-        $resourceListGenerator = $list($this->name . '\Resource', $this->appDir . '/src/Resource');
-
-        return $resourceListGenerator;
-    }
-
-    /**
      * @param string $dir
      */
     private function clearTmpDirectory($dir)
     {
         /**
-         *  A flag for clear once because called many times during the unit testing
+         * A flag for not deleting tmp directories many times with single request
          */
         static $cleanUpFlg = [];
 
