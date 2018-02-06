@@ -25,11 +25,11 @@ class AppMeta extends AbstractAppMeta
         $this->name = $name;
         $this->appDir = $appDir ? $appDir : dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
         $this->tmpDir = $this->appDir . '/var/tmp/' . $context;
-        if (! file_exists($this->tmpDir) && mkdir($this->tmpDir) && ! is_writable($this->tmpDir)) {
+        if (! file_exists($this->tmpDir) && ! mkdir($this->tmpDir, 0777, true) && ! is_dir($this->tmpDir) && ! is_writable($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
         }
         $this->logDir = $this->appDir . '/var/log/' . $context;
-        if (! file_exists($this->logDir) && mkdir($this->logDir) && ! is_writable($this->logDir)) {
+        if (! file_exists($this->logDir) && ! mkdir($this->logDir, 0777, true) && ! is_dir($this->logDir) && ! is_writable($this->logDir)) {
             throw new NotWritableException($this->logDir);
         }
         $isCacheable = is_int(strpos($context, 'prod-')) || is_int(strpos($context, 'stage-'));
