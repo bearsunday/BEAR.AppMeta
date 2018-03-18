@@ -14,6 +14,13 @@ use BEAR\AppMeta\Exception\NotWritableException;
 class AppMeta extends AbstractAppMeta
 {
     /**
+     * ClearDir flags not to delete multiple times in single request, Such as unit testing
+     *
+     * @var string[]
+     */
+    private static $cleanUpFlg = [];
+
+    /**
      * @param string $name    application name      (Vendor\Project)
      * @param string $context application context   (prod-hal-app)
      * @param string $appDir  application directory
@@ -34,22 +41,18 @@ class AppMeta extends AbstractAppMeta
         if (! file_exists($this->logDir) && ! @mkdir($this->logDir, 0777, true) && ! is_dir($this->logDir)) {
             throw new NotWritableException($this->logDir);
         }
-        $isCacheable = is_int(strpos($context, 'prod-')) || is_int(strpos($context, 'stage-'));
-        if (! $isCacheable) {
+        $isClearable = strpos($context, 'prod-') === false
+            && strpos($context, 'stage-') === false
+            && ! in_array($this->tmpDir, self::$cleanUpFlg, true)
+            && ! file_exists($this->tmpDir . '/.do_not_clear');
+        if ($isClearable) {
             $this->clearTmpDirectory($this->tmpDir);
+            self::$cleanUpFlg[] = $this->tmpDir;
         }
     }
 
     private function clearTmpDirectory(string $dir)
     {
-        /**
-         * A flag for not deleting tmp directories many times with single request
-         */
-        static $cleanUpFlg = [];
-
-        if (in_array($dir, $cleanUpFlg, true) || file_exists($dir . '/.do_not_clear')) {
-            return;
-        }
         $unlink = function ($path) use (&$unlink) {
             foreach (glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
                 is_dir($file) ? $unlink($file) : unlink($file);
@@ -57,6 +60,5 @@ class AppMeta extends AbstractAppMeta
             }
         };
         $unlink($dir);
-        $cleanUpFlg[] = $dir;
     }
 }
