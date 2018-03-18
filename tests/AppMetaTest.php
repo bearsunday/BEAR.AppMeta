@@ -85,4 +85,10 @@ class AppMetaTest extends TestCase
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/log/stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/stage-app');
     }
+
+    public function testDoNotClear()
+    {
+        new AppMeta('FakeVendor\HelloWorld', 'test-app');
+        $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt');
+    }
 }
