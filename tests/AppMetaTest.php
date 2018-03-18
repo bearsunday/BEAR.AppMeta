@@ -37,6 +37,7 @@ class AppMetaTest extends TestCase
     public function testAppReflectorResourceList()
     {
         $appMeta = new AppMeta('FakeVendor\HelloWorld');
+        $classes = $files = [];
         foreach ($appMeta->getResourceListGenerator() as list($class, $file)) {
             $classes[] = $class;
             $files[] = $file;
