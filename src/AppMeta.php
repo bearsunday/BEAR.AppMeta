@@ -12,8 +12,8 @@ use BEAR\AppMeta\Exception\NotWritableException;
 class AppMeta extends AbstractAppMeta
 {
     /**
-     * @param string $name    application name    (Vendor\Project)
-     * @param string $context application context (prod-hal-app)
+     * @param string $name    application name      (Vendor\Project)
+     * @param string $context application context   (prod-hal-app)
      * @param string $appDir  application directory
      */
     public function __construct(string $name, string $context = 'app', string $appDir = '')
@@ -38,10 +38,7 @@ class AppMeta extends AbstractAppMeta
         }
     }
 
-    /**
-     * @param string $dir
-     */
-    private function clearTmpDirectory($dir)
+    private function clearTmpDirectory(string $dir)
     {
         /**
          * A flag for not deleting tmp directories many times with single request
