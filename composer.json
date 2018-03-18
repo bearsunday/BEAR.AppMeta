@@ -5,6 +5,10 @@
         "BEAR.Sunday"
     ],
     "license": "MIT",
+    "require": {
+        "php": ">=7.0.0",
+        "koriym/psr4list": "^1.0"
+    },
     "autoload":{
         "psr-4":{
             "BEAR\\AppMeta\\": "src/"
@@ -13,15 +17,13 @@
     "autoload-dev":{
         "psr-4":{
             "BEAR\\AppMeta\\": ["tests/", "tests/Fake"],
-            "FakeVendor\\HelloWorld\\": "tests/Fake/fake-app/src"
+            "FakeVendor\\HelloWorld\\": "tests/Fake/fake-app/src",
+            "FakeVendor\\NotWritable\\": "tests/Fake/fake-not-writable/src"
         }
     },
-    "require": {
-        "koriym/psr4list": "~1.0"
-    },
     "require-dev": {
-        "bear/resource": "~1.0",
-        "phpunit/phpunit": "^5.7 || ^6.0"
+        "bear/resource": "^1.0",
+        "phpunit/phpunit": "^6.0"
     },
     "scripts" :{
         "test": ["@cs", "phpunit"],

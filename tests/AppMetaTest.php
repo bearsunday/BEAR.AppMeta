@@ -7,6 +7,7 @@
 namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
+use BEAR\AppMeta\Exception\NotWritableException;
 use PHPUnit\Framework\TestCase;
 
 class AppMetaTest extends TestCase
@@ -61,6 +62,12 @@ class AppMetaTest extends TestCase
     {
         $this->expectException(AppNameException::class);
         new AppMeta('Invalid\Invalid');
+    }
+
+    public function testNotWritable()
+    {
+        $this->expectException(NotWritableException::class);
+        new AppMeta('FakeVendor\NotWritable');
     }
 
     public function testVarTmpFolderCreation()
