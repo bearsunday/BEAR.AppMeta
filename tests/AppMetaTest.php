@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the BEAR.AppMeta package.
  *
@@ -7,6 +9,7 @@
 namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
+use BEAR\AppMeta\Exception\NotWritableException;
 use PHPUnit\Framework\TestCase;
 
 class AppMetaTest extends TestCase
@@ -21,7 +24,13 @@ class AppMetaTest extends TestCase
         parent::setUp();
         $app = dirname(__DIR__) . '/tests/Fake/fake-app/var/tmp';
         file_put_contents($app . '/app/cache', '1');
+        chmod(__DIR__ . '/Fake/fake-not-writable/var', 0644);
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld', 'prod-app');
+    }
+
+    protected function tearDown()
+    {
+        chmod(__DIR__ . '/Fake/fake-not-writable/var', 0777);
     }
 
     public function testNew()
@@ -34,6 +43,7 @@ class AppMetaTest extends TestCase
     public function testAppReflectorResourceList()
     {
         $appMeta = new AppMeta('FakeVendor\HelloWorld');
+        $classes = $files = [];
         foreach ($appMeta->getResourceListGenerator() as list($class, $file)) {
             $classes[] = $class;
             $files[] = $file;
@@ -63,10 +73,22 @@ class AppMetaTest extends TestCase
         new AppMeta('Invalid\Invalid');
     }
 
+    public function testNotWritable()
+    {
+        $this->expectException(NotWritableException::class);
+        new AppMeta('FakeVendor\NotWritable');
+    }
+
     public function testVarTmpFolderCreation()
     {
         new AppMeta('FakeVendor\HelloWorld', 'stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/log/stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/stage-app');
+    }
+
+    public function testDoNotClear()
+    {
+        new AppMeta('FakeVendor\HelloWorld', 'test-app');
+        $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt');
     }
 }

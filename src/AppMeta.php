@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the BEAR.AppMeta package.
  *
@@ -12,45 +14,45 @@ use BEAR\AppMeta\Exception\NotWritableException;
 class AppMeta extends AbstractAppMeta
 {
     /**
-     * @param string $name    application name    (Vendor\Project)
-     * @param string $context application context (prod-hal-app)
+     * ClearDir flags not to delete multiple times in single request, Such as unit testing
+     *
+     * @var string[]
+     */
+    private static $cleanUpFlg = [];
+
+    /**
+     * @param string $name    application name      (Vendor\Project)
+     * @param string $context application context   (prod-hal-app)
      * @param string $appDir  application directory
      */
-    public function __construct($name, $context = 'app', $appDir = null)
+    public function __construct(string $name, string $context = 'app', string $appDir = '')
     {
         $appModule = $name . '\Module\AppModule';
         if (! class_exists($appModule)) {
             throw new AppNameException($name);
         }
         $this->name = $name;
-        $this->appDir = $appDir ? $appDir : dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
+        $this->appDir = $appDir ?: dirname((new \ReflectionClass($appModule))->getFileName(), 3);
         $this->tmpDir = $this->appDir . '/var/tmp/' . $context;
-        if (! file_exists($this->tmpDir) && ! mkdir($this->tmpDir, 0777, true) && ! is_dir($this->tmpDir) && ! is_writable($this->tmpDir)) {
+        if (! file_exists($this->tmpDir) && ! @mkdir($this->tmpDir, 0777, true) && ! is_dir($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
         }
         $this->logDir = $this->appDir . '/var/log/' . $context;
-        if (! file_exists($this->logDir) && ! mkdir($this->logDir, 0777, true) && ! is_dir($this->logDir) && ! is_writable($this->logDir)) {
+        if (! file_exists($this->logDir) && ! @mkdir($this->logDir, 0777, true) && ! is_dir($this->logDir)) {
             throw new NotWritableException($this->logDir);
         }
-        $isCacheable = is_int(strpos($context, 'prod-')) || is_int(strpos($context, 'stage-'));
-        if (! $isCacheable) {
+        $isClearable = strpos($context, 'prod-') === false
+            && strpos($context, 'stage-') === false
+            && ! in_array($this->tmpDir, self::$cleanUpFlg, true)
+            && ! file_exists($this->tmpDir . '/.do_not_clear');
+        if ($isClearable) {
             $this->clearTmpDirectory($this->tmpDir);
+            self::$cleanUpFlg[] = $this->tmpDir;
         }
     }
 
-    /**
-     * @param string $dir
-     */
-    private function clearTmpDirectory($dir)
+    private function clearTmpDirectory(string $dir)
     {
-        /**
-         * A flag for not deleting tmp directories many times with single request
-         */
-        static $cleanUpFlg = [];
-
-        if (in_array($dir, $cleanUpFlg, true) || file_exists($dir . '/.do_not_clear')) {
-            return;
-        }
         $unlink = function ($path) use (&$unlink) {
             foreach (glob(rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '*') as $file) {
                 is_dir($file) ? $unlink($file) : unlink($file);
@@ -58,6 +60,5 @@ class AppMeta extends AbstractAppMeta
             }
         };
         $unlink($dir);
-        $cleanUpFlg[] = $dir;
     }
 }

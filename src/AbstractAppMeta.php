@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /**
  * This file is part of the BEAR.AppMeta package.
  *
@@ -11,7 +13,7 @@ use Koriym\Psr4List\Psr4List;
 abstract class AbstractAppMeta
 {
     /**
-     * Application name "{Vendor}\{Package}"
+     * Application name "{Vendor}\{Project}"
      *
      * @var string
      */
