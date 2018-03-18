@@ -24,7 +24,13 @@ class AppMetaTest extends TestCase
         parent::setUp();
         $app = dirname(__DIR__) . '/tests/Fake/fake-app/var/tmp';
         file_put_contents($app . '/app/cache', '1');
+        chmod(__DIR__ . '/Fake/fake-not-writable/var', 0644);
         $this->appMeta = new AppMeta('FakeVendor\HelloWorld', 'prod-app');
+    }
+
+    protected function tearDown()
+    {
+        chmod(__DIR__ . '/Fake/fake-not-writable/var', 0777);
     }
 
     public function testNew()
