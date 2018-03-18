@@ -4,7 +4,12 @@
 [![Code Coverage](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/badges/coverage.png?b=1.x)](https://scrutinizer-ci.com/g/bearsunday/BEAR.AppMeta/?branch=1.x)
 [![Build Status](https://travis-ci.org/bearsunday/BEAR.AppMeta.svg?branch=1.x)](https://travis-ci.org/bearsunday/BEAR.AppMeta)
 
-BEAR.Sunday application meta information object
+Application meta data value object
+
+ * AppMeta object keep the application path such as $tmpDir, $logDi and $appDir in public property by given app name and context.
+
+ * `getResourceListGenerator()` return `\Generator` to get resource class name and paths.
+
 
 ```php
 use BEAR\AppMeta\AppMeta;
