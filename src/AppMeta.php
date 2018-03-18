@@ -16,14 +16,14 @@ class AppMeta extends AbstractAppMeta
      * @param string $context application context (prod-hal-app)
      * @param string $appDir  application directory
      */
-    public function __construct(string $name, string $context = 'app', string $appDir = null)
+    public function __construct(string $name, string $context = 'app', string $appDir = '')
     {
         $appModule = $name . '\Module\AppModule';
         if (! class_exists($appModule)) {
             throw new AppNameException($name);
         }
         $this->name = $name;
-        $this->appDir = $appDir ? $appDir : dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
+        $this->appDir = $appDir ?: dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
         $this->tmpDir = $this->appDir . '/var/tmp/' . $context;
         if (! file_exists($this->tmpDir) && ! mkdir($this->tmpDir, 0777, true) && ! is_dir($this->tmpDir) && ! is_writable($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
