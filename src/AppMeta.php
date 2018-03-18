@@ -23,7 +23,7 @@ class AppMeta extends AbstractAppMeta
             throw new AppNameException($name);
         }
         $this->name = $name;
-        $this->appDir = $appDir ?: dirname(dirname(dirname((new \ReflectionClass($appModule))->getFileName())));
+        $this->appDir = $appDir ?: dirname((new \ReflectionClass($appModule))->getFileName(), 3);
         $this->tmpDir = $this->appDir . '/var/tmp/' . $context;
         if (! file_exists($this->tmpDir) && ! mkdir($this->tmpDir, 0777, true) && ! is_dir($this->tmpDir) && ! is_writable($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
