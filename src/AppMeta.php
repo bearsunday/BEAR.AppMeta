@@ -16,7 +16,7 @@ class AppMeta extends AbstractAppMeta
      * @param string $context application context (prod-hal-app)
      * @param string $appDir  application directory
      */
-    public function __construct($name, $context = 'app', $appDir = null)
+    public function __construct(string $name, string $context = 'app', string $appDir = null)
     {
         $appModule = $name . '\Module\AppModule';
         if (! class_exists($appModule)) {
