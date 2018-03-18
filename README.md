@@ -10,16 +10,18 @@ BEAR.Sunday application meta information object
 use BEAR\AppMeta\AppMeta;
 
 $appMeta = new AppMeta('MyVendor\HelloWorld');
+
+// provids directory path
+
 // $appMeta->name;    // MyVendor\HelloWorld
 // $appMeta->appDir;  // MyVendor\HelloWorld/src
 // $appMeta->logDir;  // MyVendor\HelloWorld/var/log
 // $appMeta->tmpDir;  // MyVendor\HelloWorld/var/tmp
+
+// resource class / list generator
 
 foreach ($appMeta->getResourceListGenerator() as list($class, $file)) {
     var_dump($class); // FakeVendor\HelloWorld\Resource\App\Greeting
     var_dump($file);  // path/to/Greeting.php
 }
 ```
-## Requirements
-
- * bear/package ~1.0
