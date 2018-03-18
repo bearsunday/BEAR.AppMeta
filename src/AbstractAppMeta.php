@@ -13,7 +13,7 @@ use Koriym\Psr4List\Psr4List;
 abstract class AbstractAppMeta
 {
     /**
-     * Application name "{Vendor}\{Package}"
+     * Application name "{Vendor}\{Project}"
      *
      * @var string
      */
