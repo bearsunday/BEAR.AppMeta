@@ -6,7 +6,7 @@
 
 Application meta data value object
 
- * AppMeta object keep the application path such as $tmpDir, $logDi and $appDir in public property by given app name and context.
+ * AppMeta object keep the application path such as `$tmpDir`, `$logDir` and `$appDir` in public property by given app name and context.
 
  * `getResourceListGenerator()` return `\Generator` to get resource class name and paths.
 
