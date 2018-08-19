@@ -11,6 +11,9 @@ namespace BEAR\AppMeta;
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
 
+/**
+ * @deprecated Use Meta instead
+ */
 class AppMeta extends AbstractAppMeta
 {
     /**
