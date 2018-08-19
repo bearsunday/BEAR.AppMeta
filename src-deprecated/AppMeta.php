@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+<?php declare(strict_types=1);
 /**
  * This file is part of the BEAR.AppMeta package.
  *
@@ -11,6 +9,9 @@ namespace BEAR\AppMeta;
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
 
+/**
+ * @deprecated Use Meta instead
+ */
 class AppMeta extends AbstractAppMeta
 {
     /**

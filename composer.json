@@ -11,7 +11,7 @@
     },
     "autoload":{
         "psr-4":{
-            "BEAR\\AppMeta\\": "src/"
+            "BEAR\\AppMeta\\": ["src/", "src-deprecated"]
         }
     },
     "autoload-dev":{

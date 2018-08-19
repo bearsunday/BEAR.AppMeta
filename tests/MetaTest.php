@@ -10,12 +10,12 @@ use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
 use PHPUnit\Framework\TestCase;
 
-class AppMetaTest extends TestCase
+class MetaTest extends TestCase
 {
     /**
-     * @var AppMeta
+     * @var Meta
      */
-    protected $appMeta;
+    protected $meta;
 
     protected function setUp()
     {
@@ -23,7 +23,7 @@ class AppMetaTest extends TestCase
         $app = dirname(__DIR__) . '/tests/Fake/fake-app/var/tmp';
         file_put_contents($app . '/app/cache', '1');
         chmod(__DIR__ . '/Fake/fake-not-writable/var', 0644);
-        $this->appMeta = new AppMeta('FakeVendor\HelloWorld', 'prod-app');
+        $this->meta = new Meta('FakeVendor\HelloWorld', 'prod-app');
     }
 
     protected function tearDown()
@@ -33,16 +33,16 @@ class AppMetaTest extends TestCase
 
     public function testNew()
     {
-        $actual = $this->appMeta;
-        $this->assertInstanceOf('\BEAR\AppMeta\AppMeta', $actual);
-        $this->assertFileExists($this->appMeta->tmpDir);
+        $actual = $this->meta;
+        $this->assertInstanceOf(Meta::class, $actual);
+        $this->assertFileExists($this->meta->tmpDir);
     }
 
     public function testAppReflectorResourceList()
     {
-        $appMeta = new AppMeta('FakeVendor\HelloWorld');
+        $Meta = new Meta('FakeVendor\HelloWorld');
         $classes = $files = [];
-        foreach ($appMeta->getResourceListGenerator() as list($class, $file)) {
+        foreach ($Meta->getResourceListGenerator() as list($class, $file)) {
             $classes[] = $class;
             $files[] = $file;
         }
@@ -55,12 +55,12 @@ class AppMetaTest extends TestCase
             'FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four'];
         $this->assertSame($expect, $classes);
         $expect = [
-            $appMeta->appDir . '/src/Resource/App/One.php',
-            $appMeta->appDir . '/src/Resource/App/Two.php',
-            $appMeta->appDir . '/src/Resource/App/User.php',
-            $appMeta->appDir . '/src/Resource/Page/Index.php',
-            $appMeta->appDir . '/src/Resource/App/Sub/Three.php',
-            $appMeta->appDir . '/src/Resource/App/Sub/Sub/Four.php'
+            $Meta->appDir . '/src/Resource/App/One.php',
+            $Meta->appDir . '/src/Resource/App/Two.php',
+            $Meta->appDir . '/src/Resource/App/User.php',
+            $Meta->appDir . '/src/Resource/Page/Index.php',
+            $Meta->appDir . '/src/Resource/App/Sub/Three.php',
+            $Meta->appDir . '/src/Resource/App/Sub/Sub/Four.php'
         ];
         $this->assertSame($expect, $files);
     }
@@ -68,25 +68,25 @@ class AppMetaTest extends TestCase
     public function testInvalidName()
     {
         $this->expectException(AppNameException::class);
-        new AppMeta('Invalid\Invalid');
+        new Meta('Invalid\Invalid');
     }
 
     public function testNotWritable()
     {
         $this->expectException(NotWritableException::class);
-        new AppMeta('FakeVendor\NotWritable');
+        new Meta('FakeVendor\NotWritable');
     }
 
     public function testVarTmpFolderCreation()
     {
-        new AppMeta('FakeVendor\HelloWorld', 'stage-app');
+        new Meta('FakeVendor\HelloWorld', 'stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/log/stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/stage-app');
     }
 
     public function testDoNotClear()
     {
-        new AppMeta('FakeVendor\HelloWorld', 'test-app');
+        new Meta('FakeVendor\HelloWorld', 'test-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt');
     }
 }
