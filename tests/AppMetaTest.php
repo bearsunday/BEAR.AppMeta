@@ -1,4 +1,5 @@
-<?php declare(strict_types=1);
+<?php
+declare(strict_types=1);
 /**
  * This file is part of the BEAR.AppMeta package.
  *
@@ -88,5 +89,21 @@ class AppMetaTest extends TestCase
     {
         new AppMeta('FakeVendor\HelloWorld', 'test-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt');
+    }
+
+    public function testUriList()
+    {
+        $appMeta = new Meta('FakeVendor\HelloWorld');
+        $uris = [];
+        foreach ($appMeta->getUris('app') as $uri) {
+            $uris[] = $uri;
+        }
+        $expect = [
+            '/one',
+            '/two',
+            '/user',
+            '/sub/three',
+            '/sub/sub/four'];
+        $this->assertSame($expect, $uris);
     }
 }
