@@ -32,10 +32,7 @@ abstract class AbstractAppMeta
      */
     public $logDir;
 
-    /**
-     * @return \Generator
-     */
-    public function getResourceListGenerator()
+    public function getResourceListGenerator() : \Generator
     {
         $list = new Psr4List();
         $resourceListGenerator = $list($this->name . '\Resource', $this->appDir . '/src/Resource');
