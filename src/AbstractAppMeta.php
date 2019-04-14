@@ -49,7 +49,7 @@ abstract class AbstractAppMeta
         foreach ($this->getResourceListGenerator() as list($class, $file)) {
             $paths = explode('\\', $class);
             $path = array_slice($paths, 3);
-            array_walk($path, [$this, 'camel2snake']);
+            array_walk($path, [$this, 'camel2kebab']);
             if ($scheme === '*') {
                 $uri = sprintf('%s://self/%s', $path[0], implode('/', array_slice($path, 1)));
 
@@ -63,8 +63,8 @@ abstract class AbstractAppMeta
         }
     }
 
-    private function camel2snake(&$str)
+    private function camel2kebab(&$str)
     {
-        $str = ltrim(strtolower(preg_replace('/[A-Z]/', '_\0', $str)), '_');
+        $str = ltrim(strtolower(preg_replace('/[A-Z]/', '-\0', $str)), '-');
     }
 }
