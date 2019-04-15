@@ -44,7 +44,7 @@ abstract class AbstractAppMeta
     /**
      * @param string $scheme 'app' | 'page' | '*'
      */
-    public function getUris(string $scheme = '*') : \Generator
+    public function getGenerator(string $scheme = '*') : \Generator
     {
         foreach ($this->getResourceListGenerator() as list($class, $file)) {
             $paths = explode('\\', $class);
@@ -53,12 +53,12 @@ abstract class AbstractAppMeta
             if ($scheme === '*') {
                 $uri = sprintf('%s://self/%s', $path[0], implode('/', array_slice($path, 1)));
 
-                yield $uri;
+                yield new ResMeta($uri, $class, $file);
             }
             if ($scheme === $path[0]) {
                 $uri = sprintf('/%s', implode('/', array_slice($path, 1)));
 
-                yield $uri;
+                yield new ResMeta($uri, $class, $file);
             }
         }
     }
