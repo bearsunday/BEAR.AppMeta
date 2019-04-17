@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
@@ -22,7 +21,7 @@ class Meta extends AbstractAppMeta
     {
         $this->name = $name;
         try {
-            $this->appDir = $appDir ?: dirname((new \ReflectionClass($name . '\Module\AppModule'))->getFileName(), 3);
+            $this->appDir = $appDir ?: dirname((string) (new \ReflectionClass($name . '\Module\AppModule'))->getFileName(), 3);
         } catch (\ReflectionException $e) {
             throw new AppNameException($name);
         }

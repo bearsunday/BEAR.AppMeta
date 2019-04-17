@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace BEAR\AppMeta;
 
 use Koriym\Psr4List\Psr4List;
@@ -60,8 +59,8 @@ abstract class AbstractAppMeta
         }
     }
 
-    private function camel2kebab(&$str)
+    private function camel2kebab(string &$str)
     {
-        $str = ltrim(strtolower(preg_replace('/[A-Z]/', '-\0', $str)), '-');
+        $str = ltrim(strtolower((string) preg_replace('/[A-Z]/', '-\0', $str)), '-');
     }
 }
