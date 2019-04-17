@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-
 namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
+use FakeVendor\HelloWorld\Resource\App\One;
 use PHPUnit\Framework\TestCase;
 
 class AppMetaTest extends TestCase
@@ -93,15 +93,12 @@ class AppMetaTest extends TestCase
     {
         $appMeta = new Meta('FakeVendor\HelloWorld');
         $uris = [];
-        foreach ($appMeta->getUris('app') as $uri) {
+        foreach ($appMeta->getGenerator('app') as $uri) {
             $uris[] = $uri;
         }
-        $expect = [
-            '/one',
-            '/two',
-            '/user',
-            '/sub/three',
-            '/sub/sub/four'];
-        $this->assertSame($expect, $uris);
+        $this->assertCount(5, $uris);
+        $this->assertSame('/one', $uris[0]->uriPath);
+        $this->assertSame(One::class, $uris[0]->class);
+        $this->assertContains('tests/Fake/fake-app/src/Resource/App/One.php', $uris[0]->filePath);
     }
 }
