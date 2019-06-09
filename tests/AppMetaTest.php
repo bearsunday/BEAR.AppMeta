@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class AppMetaTest extends TestCase
 {
     /**
-     * @var AppMeta
+     * @var Meta
      */
     protected $appMeta;
 
