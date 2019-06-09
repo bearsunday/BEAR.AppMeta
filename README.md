@@ -8,7 +8,7 @@ Application meta data value object
 
  * AppMeta object keep the application path such as `$tmpDir`, `$logDir` and `$appDir` in public property by given app name and context.
 
- * `getResourceListGenerator()` return `\Generator` to get resource class name and paths.
+ * `getGenerator()` return `\Generator` to get resource meta data.
 
 
 ```php
@@ -23,10 +23,17 @@ $appMeta = new AppMeta('MyVendor\HelloWorld');
 // $appMeta->logDir;  // MyVendor\HelloWorld/var/log
 // $appMeta->tmpDir;  // MyVendor\HelloWorld/var/tmp
 
-// resource class / list generator
+// resource meta generator
 
-foreach ($appMeta->getResourceListGenerator() as list($class, $file)) {
-    var_dump($class); // FakeVendor\HelloWorld\Resource\App\Greeting
-    var_dump($file);  // path/to/Greeting.php
+foreach ($appMeta->getGenerator('*') as $resourceMeta) {
+    var_dump($resourceMeta->uriPath); // app://self/one
+    var_dump($resourceMeta->class);   // FakeVendor\HelloWorld\Resource\App\One
+    var_dump($resourceMeta->file);    // /path/to/src/Resource/App/One.php
+}
+
+foreach ($appMeta->getGenerator('app') as $resourceMeta) {
+    var_dump($resourceMeta->uriPath); // /one
+    var_dump($resourceMeta->class);   // FakeVendor\HelloWorld\Resource\App\One
+    var_dump($resourceMeta->file);    // /path/to/src/Resource/App/One.php
 }
 ```
