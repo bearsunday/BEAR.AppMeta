@@ -89,7 +89,7 @@ class AppMetaTest extends TestCase
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt');
     }
 
-    public function testUriList()
+    public function testGetGeneratorApp()
     {
         $appMeta = new Meta('FakeVendor\HelloWorld');
         $uris = [];
@@ -98,6 +98,19 @@ class AppMetaTest extends TestCase
         }
         $this->assertCount(5, $uris);
         $this->assertSame('/one', $uris[0]->uriPath);
+        $this->assertSame(One::class, $uris[0]->class);
+        $this->assertContains('tests/Fake/fake-app/src/Resource/App/One.php', $uris[0]->filePath);
+    }
+
+    public function testGetGeneratorAll()
+    {
+        $appMeta = new Meta('FakeVendor\HelloWorld');
+        $uris = [];
+        foreach ($appMeta->getGenerator('*') as $uri) {
+            $uris[] = $uri;
+        }
+        $this->assertCount(6, $uris);
+        $this->assertSame('app://self/one', $uris[0]->uriPath);
         $this->assertSame(One::class, $uris[0]->class);
         $this->assertContains('tests/Fake/fake-app/src/Resource/App/One.php', $uris[0]->filePath);
     }
