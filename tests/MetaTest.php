@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
@@ -16,7 +15,7 @@ class MetaTest extends TestCase
      */
     protected $meta;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $app = dirname(__DIR__) . '/tests/Fake/fake-app/var/tmp';
@@ -25,7 +24,7 @@ class MetaTest extends TestCase
         $this->meta = new Meta('FakeVendor\HelloWorld', 'prod-app');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         chmod(__DIR__ . '/Fake/fake-not-writable/var', 0777);
     }

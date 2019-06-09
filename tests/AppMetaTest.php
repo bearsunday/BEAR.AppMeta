@@ -16,16 +16,16 @@ class AppMetaTest extends TestCase
      */
     protected $appMeta;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         parent::setUp();
         $app = dirname(__DIR__) . '/tests/Fake/fake-app/var/tmp';
         file_put_contents($app . '/app/cache', '1');
         chmod(__DIR__ . '/Fake/fake-not-writable/var', 0644);
-        $this->appMeta = new AppMeta('FakeVendor\HelloWorld', 'prod-app');
+        $this->appMeta = new Meta('FakeVendor\HelloWorld', 'prod-app');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         chmod(__DIR__ . '/Fake/fake-not-writable/var', 0777);
     }
@@ -33,13 +33,13 @@ class AppMetaTest extends TestCase
     public function testNew()
     {
         $actual = $this->appMeta;
-        $this->assertInstanceOf('\BEAR\AppMeta\AppMeta', $actual);
+        $this->assertInstanceOf('\BEAR\AppMeta\Meta', $actual);
         $this->assertFileExists($this->appMeta->tmpDir);
     }
 
     public function testAppReflectorResourceList()
     {
-        $appMeta = new AppMeta('FakeVendor\HelloWorld');
+        $appMeta = new Meta('FakeVendor\HelloWorld');
         $classes = $files = [];
         foreach ($appMeta->getResourceListGenerator() as list($class, $file)) {
             $classes[] = $class;
@@ -67,25 +67,25 @@ class AppMetaTest extends TestCase
     public function testInvalidName()
     {
         $this->expectException(AppNameException::class);
-        new AppMeta('Invalid\Invalid');
+        new Meta('Invalid\Invalid');
     }
 
     public function testNotWritable()
     {
         $this->expectException(NotWritableException::class);
-        new AppMeta('FakeVendor\NotWritable');
+        new Meta('FakeVendor\NotWritable');
     }
 
     public function testVarTmpFolderCreation()
     {
-        new AppMeta('FakeVendor\HelloWorld', 'stage-app');
+        new Meta('FakeVendor\HelloWorld', 'stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/log/stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/stage-app');
     }
 
     public function testDoNotClear()
     {
-        new AppMeta('FakeVendor\HelloWorld', 'test-app');
+        new Meta('FakeVendor\HelloWorld', 'test-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt');
     }
 
