@@ -59,7 +59,7 @@ abstract class AbstractAppMeta
         }
     }
 
-    private function camel2kebab(string &$str)
+    private function camel2kebab(string &$str) : void
     {
         $str = ltrim(strtolower((string) preg_replace('/[A-Z]/', '-\0', $str)), '-');
     }
