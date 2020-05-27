@@ -30,6 +30,9 @@ abstract class AbstractAppMeta
      */
     public $logDir;
 
+    /**
+     * @return \Generator<string>
+     */
     public function getResourceListGenerator() : \Generator
     {
         $list = new Psr4List;
@@ -39,6 +42,8 @@ abstract class AbstractAppMeta
 
     /**
      * @param string $scheme 'app' | 'page' | '*'
+     *
+     * @return \Generator<ResMeta>
      */
     public function getGenerator(string $scheme = '*') : \Generator
     {
