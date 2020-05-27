@@ -30,6 +30,9 @@ abstract class AbstractAppMeta
      */
     public $logDir;
 
+    /**
+     * @return \Generator<array{0: string, 1: string}>
+     */
     public function getResourceListGenerator() : \Generator
     {
         $list = new Psr4List;
@@ -39,15 +42,18 @@ abstract class AbstractAppMeta
 
     /**
      * @param string $scheme 'app' | 'page' | '*'
+     *
+     * @return \Generator<ResMeta>
      */
     public function getGenerator(string $scheme = '*') : \Generator
     {
         foreach ($this->getResourceListGenerator() as list($class, $file)) {
             $paths = explode('\\', $class);
+            /** @var array<string> $paths */
             $path = array_slice($paths, 3);
             array_walk($path, [$this, 'camel2kebab']);
             if ($scheme === '*') {
-                $uri = sprintf('%s://self/%s', $path[0], implode('/', array_slice($path, 1)));
+                $uri = sprintf('%s://self/%s', (string) $path[0], implode('/', array_slice($path, 1)));
 
                 yield new ResMeta($uri, $class, $file);
             }

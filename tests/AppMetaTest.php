@@ -30,14 +30,14 @@ class AppMetaTest extends TestCase
         chmod(__DIR__ . '/Fake/fake-not-writable/var', 0777);
     }
 
-    public function testNew()
+    public function testNew() : void
     {
         $actual = $this->appMeta;
         $this->assertInstanceOf('\BEAR\AppMeta\Meta', $actual);
         $this->assertFileExists($this->appMeta->tmpDir);
     }
 
-    public function testAppReflectorResourceList()
+    public function testAppReflectorResourceList() : void
     {
         $appMeta = new Meta('FakeVendor\HelloWorld');
         $classes = $files = [];
@@ -64,32 +64,32 @@ class AppMetaTest extends TestCase
         $this->assertSame($expect, $files);
     }
 
-    public function testInvalidName()
+    public function testInvalidName() : void
     {
         $this->expectException(AppNameException::class);
         new Meta('Invalid\Invalid');
     }
 
-    public function testNotWritable()
+    public function testNotWritable() : void
     {
         $this->expectException(NotWritableException::class);
         new Meta('FakeVendor\NotWritable');
     }
 
-    public function testVarTmpFolderCreation()
+    public function testVarTmpFolderCreation() : void
     {
         new Meta('FakeVendor\HelloWorld', 'stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/log/stage-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/stage-app');
     }
 
-    public function testDoNotClear()
+    public function testDoNotClear() : void
     {
         new Meta('FakeVendor\HelloWorld', 'test-app');
         $this->assertFileExists(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt');
     }
 
-    public function testGetGeneratorApp()
+    public function testGetGeneratorApp() : void
     {
         $appMeta = new Meta('FakeVendor\HelloWorld');
         $uris = [];
@@ -102,7 +102,7 @@ class AppMetaTest extends TestCase
         $this->assertContains('tests/Fake/fake-app/src/Resource/App/One.php', $uris[0]->filePath);
     }
 
-    public function testGetGeneratorAll()
+    public function testGetGeneratorAll() : void
     {
         $appMeta = new Meta('FakeVendor\HelloWorld');
         $uris = [];
