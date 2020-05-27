@@ -31,7 +31,7 @@ abstract class AbstractAppMeta
     public $logDir;
 
     /**
-     * @return \Generator<string>
+     * @return \Generator<array{0: string, 1: string}>
      */
     public function getResourceListGenerator() : \Generator
     {

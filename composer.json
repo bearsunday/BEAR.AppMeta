@@ -7,7 +7,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.2.0",
-        "koriym/psr4list": "^1.0"
+        "koriym/psr4list": "^1.0.1"
     },
     "autoload":{
         "psr-4":{
