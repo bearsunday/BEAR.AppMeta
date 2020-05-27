@@ -1,18 +1,14 @@
 language: php
-sudo: false
 
 php:
   - 7.2
   - 7.3
-  - 7.4snapshot
+  - 7.4
 
 cache:
   directories:
     - vendor
     - $HOME/.composer/cache
-
-matrix:
-  fast_finish: true
 
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
@@ -26,13 +22,14 @@ script:
   - ./vendor/bin/phpunit;
 
 jobs:
+  fast_finish: true
   include:
     - stage: Test
       name: Lowest dependencies
       php: 7.2
       install: composer update --prefer-dist --prefer-lowest
 
-    - stage: Test
+    - stage: Code Quality
       name: Code coverage
       php: 7.2
       before_script:
@@ -46,10 +43,13 @@ jobs:
     - stage: Code Quality
       name: Static analysis
       php: 7.2
-      install: composer global require --dev phpstan/phpstan ^0.11 vimeo/psalm ^3.7;
+      install:
+        - composer update
+        - composer global require --dev phpstan/phpstan ^0.12 vimeo/psalm ^3.11 phpmetrics/phpmetrics ^2.6;
       script:
-        - ~/.composer/vendor/bin/phpstan analyse -l max -c phpstan.neon src tests --no-progress --no-interaction;
+        - ~/.composer/vendor/bin/phpstan analyse -c phpstan.neon --no-progress --no-interaction;
         - ~/.composer/vendor/bin/psalm --show-info=false
+        - ~/.composer/vendor/bin/phpmetrics --exclude=Exception src
 
     - stage: Code Quality
       name: Coding standards
