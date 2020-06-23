@@ -12,9 +12,9 @@ Application meta data value object
 
 
 ```php
-use BEAR\AppMeta\AppMeta;
+use BEAR\AppMeta\Meta;
 
-$appMeta = new AppMeta('MyVendor\HelloWorld');
+$appMeta = new Meta('MyVendor\HelloWorld');
 
 // provids directory path
 

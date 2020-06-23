@@ -7,7 +7,7 @@ namespace BEAR\AppMeta;
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
 
-class Meta extends AbstractAppMeta
+final class Meta extends AbstractAppMeta
 {
     /**
      * @param string $name    application name      (Vendor\Project)
