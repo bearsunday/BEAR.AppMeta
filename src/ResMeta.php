@@ -16,7 +16,7 @@ final class ResMeta
     /**
      * Class name
      *
-     * @var string
+     * @var class-string
      */
     public $class;
 
