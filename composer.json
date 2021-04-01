@@ -9,6 +9,11 @@
         "php": ">=7.2.0",
         "koriym/psr4list": "^1.0.2"
     },
+    "require-dev": {
+        "bamarni/composer-bin-plugin": "^1.4",
+        "bear/resource": "^1.0",
+        "phpunit/phpunit": "^9.5"
+    },
     "autoload":{
         "psr-4":{
             "BEAR\\AppMeta\\": ["src/", "src-deprecated"]
@@ -21,16 +26,22 @@
             "FakeVendor\\NotWritable\\": "tests/Fake/fake-not-writable/src"
         }
     },
-    "require-dev": {
-        "bear/resource": "^1.0",
-        "phpunit/phpunit": "^7.5"
-    },
     "scripts" :{
-        "test": ["phpunit"],
-        "tests": ["@cs", "phpstan analyse -l max src tests -c phpstan.neon --no-progress", "psalm --show-info=false", "@test"],
-        "coverage": ["php -dzend_extension=xdebug.so ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage"],
-        "cs": ["php-cs-fixer fix -v --dry-run", "phpcs --standard=./phpcs.xml src"],
-        "cs-fix": ["php-cs-fixer fix -v", "phpcbf src"],
-        "metrics": ["phpmetrics --report-html=build/metrics/ --extensions=php src,composer.json,composer.lock"]
+        "post-install-cmd": "@composer bin all install --ansi",
+        "setup": "php bin/setup.php",
+        "test": "./vendor/bin/phpunit",
+        "coverage": "php -dzend_extension=xdebug.so -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage",
+        "pcov": "php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml",
+        "cs": "./vendor/bin/phpcs",
+        "cs-fix": "./vendor/bin/phpcbf src tests",
+        "metrics": "./vendor/bin/phpmetrics --report-html=build/metrics --exclude=Exception src",
+        "clean": [
+            "./vendor/bin/phpstan clear-result-cache",
+            "./vendor/bin/psalm --clear-cache"
+        ],
+        "sa": [
+            "./vendor/bin/phpstan analyse -c phpstan.neon",
+            "psalm --show-info=true"
+        ]
     }
 }
