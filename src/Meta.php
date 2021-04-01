@@ -6,6 +6,13 @@ namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
+use ReflectionClass;
+
+use function class_exists;
+use function dirname;
+use function file_exists;
+use function is_dir;
+use function mkdir;
 
 final class Meta extends AbstractAppMeta
 {
@@ -22,19 +29,20 @@ final class Meta extends AbstractAppMeta
         if (! file_exists($this->tmpDir) && ! @mkdir($this->tmpDir, 0777, true) && ! is_dir($this->tmpDir)) {
             throw new NotWritableException($this->tmpDir);
         }
+
         $this->logDir = $this->appDir . '/var/log/' . $context;
         if (! file_exists($this->logDir) && ! @mkdir($this->logDir, 0777, true) && ! is_dir($this->logDir)) {
             throw new NotWritableException($this->logDir);
         }
     }
 
-    private function getAppDir(string $name) : string
+    private function getAppDir(string $name): string
     {
         $module = $name . '\Module\AppModule';
         if (! class_exists($module)) {
             throw new AppNameException($name);
         }
 
-        return dirname((string) (new \ReflectionClass($module))->getFileName(), 3);
+        return dirname((string) (new ReflectionClass($module))->getFileName(), 3);
     }
 }
