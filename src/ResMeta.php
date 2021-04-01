@@ -13,11 +13,7 @@ final class ResMeta
      */
     public $uriPath;
 
-    /**
-     * Class name
-     *
-     * @var string
-     */
+    /** @var class-string */
     public $class;
 
     /**
@@ -27,6 +23,9 @@ final class ResMeta
      */
     public $filePath;
 
+    /**
+     * @param class-string $class
+     */
     public function __construct(string $uriPath, string $class, string $filePath)
     {
         $this->uriPath = $uriPath;
