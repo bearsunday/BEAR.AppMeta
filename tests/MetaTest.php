@@ -40,9 +40,9 @@ class MetaTest extends TestCase
 
     public function testAppReflectorResourceList(): void
     {
-        $Meta = new Meta('FakeVendor\HelloWorld');
+        $meta = new Meta('FakeVendor\HelloWorld');
         $classes = $files = [];
-        foreach ($Meta->getResourceListGenerator() as [$class, $file]) {
+        foreach ($meta->getResourceListGenerator() as [$class, $file]) {
             $classes[] = $class;
             $files[] = $file;
         }
@@ -57,12 +57,12 @@ class MetaTest extends TestCase
         ];
         $this->assertSame($expect, $classes);
         $expect = [
-            $Meta->appDir . '/src/Resource/App/One.php',
-            $Meta->appDir . '/src/Resource/App/Two.php',
-            $Meta->appDir . '/src/Resource/App/User.php',
-            $Meta->appDir . '/src/Resource/Page/Index.php',
-            $Meta->appDir . '/src/Resource/App/Sub/Three.php',
-            $Meta->appDir . '/src/Resource/App/Sub/Sub/Four.php',
+            $meta->appDir . '/src/Resource/App/One.php',
+            $meta->appDir . '/src/Resource/App/Two.php',
+            $meta->appDir . '/src/Resource/App/User.php',
+            $meta->appDir . '/src/Resource/Page/Index.php',
+            $meta->appDir . '/src/Resource/App/Sub/Three.php',
+            $meta->appDir . '/src/Resource/App/Sub/Sub/Four.php',
         ];
         $this->assertSame($expect, $files);
     }
