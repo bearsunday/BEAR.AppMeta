@@ -60,13 +60,17 @@ abstract class AbstractAppMeta
             array_walk($path, [$this, 'camel2kebab']);
             assert(class_exists($class));
             if ($scheme === '*') {
-                $uri = sprintf('%s://self/%s', (string) $path[0], implode('/', array_slice($path, 1)));
+                /** @var array<string> $slice */
+                $slice = array_slice($path, 1);
+                $uri = sprintf('%s://self/%s', (string) $path[0], implode('/', $slice));
 
                 yield new ResMeta($uri, $class, $file);
             }
 
             if ($scheme === $path[0]) {
-                $uri = sprintf('/%s', implode('/', array_slice($path, 1)));
+                /** @var array<string> $sliceSchema */
+                $sliceSchema = array_slice($path, 1);
+                $uri = sprintf('/%s', implode('/', $sliceSchema));
 
                 yield new ResMeta($uri, $class, $file);
             }
