@@ -9,8 +9,6 @@ use Koriym\Psr4List\Psr4List;
 
 use function array_slice;
 use function array_walk;
-use function assert;
-use function class_exists;
 use function explode;
 use function implode;
 use function ltrim;
