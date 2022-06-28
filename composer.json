@@ -31,6 +31,7 @@
         "post-update-cmd": "@composer bin all update --ansi",
         "setup": "php bin/setup.php",
         "test": "./vendor/bin/phpunit",
+        "tests": ["@cs", "@sa", "@test"],
         "coverage": "php -dzend_extension=xdebug.so -dxdebug.mode=coverage ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage",
         "pcov": "php -dextension=pcov.so -d pcov.enabled=1 ./vendor/bin/phpunit --coverage-text --coverage-html=build/coverage  --coverage-clover=coverage.xml",
         "cs": "./vendor/bin/phpcs",
@@ -44,5 +45,10 @@
             "./vendor/bin/phpstan analyse -c phpstan.neon",
             "psalm --show-info=true"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "bamarni/composer-bin-plugin": true
+        }
     }
 }
