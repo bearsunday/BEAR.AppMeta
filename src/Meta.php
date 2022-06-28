@@ -32,7 +32,7 @@ final class Meta extends AbstractAppMeta
 
         $this->logDir = $this->appDir . '/var/log/' . $context;
         if (! file_exists($this->logDir) && ! @mkdir($this->logDir, 0777, true) && ! is_dir($this->logDir)) {
-            throw new NotWritableException($this->logDir);
+            throw new NotWritableException($this->logDir); // @codeCoverageIgnore
         }
     }
 
