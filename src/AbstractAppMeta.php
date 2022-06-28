@@ -37,7 +37,7 @@ abstract class AbstractAppMeta
     public $logDir;
 
     /**
-     * @return Generator<array{0: string, 1: string}>
+     * @return Generator<array{0: class-string, 1: string}>
      */
     public function getResourceListGenerator(): Generator
     {
@@ -58,7 +58,6 @@ abstract class AbstractAppMeta
             /** @var array<string> $paths */
             $path = array_slice($paths, 3);
             array_walk($path, [$this, 'camel2kebab']);
-            assert(class_exists($class));
             if ($scheme === '*') {
                 /** @var array<string> $slice */
                 $slice = array_slice($path, 1);
