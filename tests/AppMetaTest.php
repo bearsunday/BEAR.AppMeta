@@ -40,7 +40,7 @@ class AppMetaTest extends TestCase
     public function testNew(): void
     {
         $actual = $this->appMeta;
-        $this->assertInstanceOf('\\' . Meta::class, $actual);
+        $this->assertInstanceOf(Meta::class, $actual);
         $this->assertFileExists($this->appMeta->tmpDir);
     }
 
