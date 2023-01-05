@@ -19,7 +19,6 @@ final class ResMeta
          * File path
          */
         public string $filePath
-    )
-    {
+    ) {
     }
 }
