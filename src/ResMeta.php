@@ -7,29 +7,19 @@ namespace BEAR\AppMeta;
 final class ResMeta
 {
     /**
-     * URI path
-     *
-     * @var string
-     */
-    public $uriPath;
-
-    /** @var class-string */
-    public $class;
-
-    /**
-     * File path
-     *
-     * @var string
-     */
-    public $filePath;
-
-    /**
      * @param class-string $class
      */
-    public function __construct(string $uriPath, string $class, string $filePath)
+    public function __construct(
+        /**
+         * URI path
+         */
+        public string $uriPath,
+        public string $class,
+        /**
+         * File path
+         */
+        public string $filePath
+    )
     {
-        $this->uriPath = $uriPath;
-        $this->class = $class;
-        $this->filePath = $filePath;
     }
 }

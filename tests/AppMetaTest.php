@@ -35,7 +35,7 @@ class AppMetaTest extends TestCase
     public function testNew(): void
     {
         $actual = $this->appMeta;
-        $this->assertInstanceOf('\BEAR\AppMeta\Meta', $actual);
+        $this->assertInstanceOf('\\' . \BEAR\AppMeta\Meta::class, $actual);
         $this->assertFileExists($this->appMeta->tmpDir);
     }
 
@@ -49,12 +49,12 @@ class AppMetaTest extends TestCase
         }
 
         $expect = [
-            'FakeVendor\HelloWorld\Resource\App\One',
-            'FakeVendor\HelloWorld\Resource\App\Two',
-            'FakeVendor\HelloWorld\Resource\App\User',
-            'FakeVendor\HelloWorld\Resource\Page\Index',
-            'FakeVendor\HelloWorld\Resource\App\Sub\Three',
-            'FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four',
+            \FakeVendor\HelloWorld\Resource\App\One::class,
+            \FakeVendor\HelloWorld\Resource\App\Two::class,
+            \FakeVendor\HelloWorld\Resource\App\User::class,
+            \FakeVendor\HelloWorld\Resource\Page\Index::class,
+            \FakeVendor\HelloWorld\Resource\App\Sub\Three::class,
+            \FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four::class,
         ];
         $this->assertSame($expect, $classes);
         $expect = [
