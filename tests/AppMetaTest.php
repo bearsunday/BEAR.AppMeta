@@ -26,6 +26,7 @@ class AppMetaTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $app = dirname(__DIR__) . '/tests/Fake/fake-app/var/tmp';
         file_put_contents($app . '/app/cache', '1');
         chmod(__DIR__ . '/Fake/fake-not-writable/var', 0644);

@@ -36,9 +36,7 @@ abstract class AbstractAppMeta
     /** @var string */
     public $logDir;
 
-    /**
-     * @return Generator<array{0: class-string<ResourceObject>, 1: string}>
-     */
+    /** @return Generator<array{0: class-string<ResourceObject>, 1: string}> */
     public function getResourceListGenerator(): Generator
     {
         $list = new Psr4List();

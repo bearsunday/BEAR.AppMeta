@@ -8,9 +8,7 @@ use BEAR\Resource\ResourceObject;
 
 final class ResMeta
 {
-    /**
-     * @param class-string<ResourceObject> $class
-     */
+    /** @param class-string<ResourceObject> $class */
     public function __construct(
         /**
          * URI path
@@ -20,7 +18,7 @@ final class ResMeta
         /**
          * File path
          */
-        public string $filePath
+        public string $filePath,
     ) {
     }
 }
