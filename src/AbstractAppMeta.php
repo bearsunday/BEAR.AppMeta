@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
+use BEAR\Resource\ResourceObject;
 use Generator;
 use Koriym\Psr4List\Psr4List;
 
@@ -11,6 +12,7 @@ use function array_slice;
 use function array_walk;
 use function explode;
 use function implode;
+use function is_a;
 use function ltrim;
 use function preg_replace;
 use function sprintf;
@@ -34,14 +36,18 @@ abstract class AbstractAppMeta
     /** @var string */
     public $logDir;
 
-    /**
-     * @return Generator<array{0: class-string, 1: string}>
-     */
+    /** @return Generator<array{0: class-string<ResourceObject>, 1: string}> */
     public function getResourceListGenerator(): Generator
     {
         $list = new Psr4List();
 
-        return $list($this->name . '\Resource', $this->appDir . '/src/Resource');
+        foreach ($list($this->name . '\Resource', $this->appDir . '/src/Resource') as [$class, $file]) {
+            if (! is_a($class, ResourceObject::class, true)) {
+                continue;
+            }
+
+            yield [$class, $file];
+        }
     }
 
     /**

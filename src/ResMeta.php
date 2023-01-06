@@ -4,32 +4,21 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
+use BEAR\Resource\ResourceObject;
+
 final class ResMeta
 {
-    /**
-     * URI path
-     *
-     * @var string
-     */
-    public $uriPath;
-
-    /** @var class-string */
-    public $class;
-
-    /**
-     * File path
-     *
-     * @var string
-     */
-    public $filePath;
-
-    /**
-     * @param class-string $class
-     */
-    public function __construct(string $uriPath, string $class, string $filePath)
-    {
-        $this->uriPath = $uriPath;
-        $this->class = $class;
-        $this->filePath = $filePath;
+    /** @param class-string<ResourceObject> $class */
+    public function __construct(
+        /**
+         * URI path
+         */
+        public string $uriPath,
+        public string $class,
+        /**
+         * File path
+         */
+        public string $filePath,
+    ) {
     }
 }
