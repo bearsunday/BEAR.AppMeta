@@ -1,5 +1,5 @@
 build:
-    image: ubuntu:22.04
+    image: default-jammy
     environment:
         php: 8.4
     nodes:
