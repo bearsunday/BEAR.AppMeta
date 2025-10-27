@@ -8,20 +8,27 @@ use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
 use ReflectionClass;
 
+use function assert;
 use function class_exists;
 use function dirname;
 use function file_exists;
 use function is_dir;
 use function mkdir;
+use function sprintf;
 
 use const DIRECTORY_SEPARATOR;
 
+/**
+ * @psalm-import-type AppName from Types
+ * @psalm-import-type Context from Types
+ * @psalm-import-type AppDir from Types
+ */
 final class Meta extends AbstractAppMeta
 {
     /**
-     * @param string $name    application name      (Vendor\Project)
-     * @param string $context application context   (prod-hal-app)
-     * @param string $appDir  application directory
+     * @param AppName $name    application name      (Vendor\Project)
+     * @param Context $context application context   (prod-hal-app)
+     * @param string  $appDir  application directory
      */
     public function __construct(string $name, string $context = 'app', string $appDir = '')
     {
@@ -38,6 +45,11 @@ final class Meta extends AbstractAppMeta
         }
     }
 
+    /**
+     * @param AppName $name
+     *
+     * @return AppDir
+     */
     private function getAppDir(string $name): string
     {
         $module = $name . '\Module\AppModule';
@@ -45,6 +57,13 @@ final class Meta extends AbstractAppMeta
             throw new AppNameException($name);
         }
 
-        return dirname((string) (new ReflectionClass($module))->getFileName(), 3);
+        $fileName = (new ReflectionClass($module))->getFileName();
+        assert($fileName !== false, sprintf('Cannot locate AppModule file: %s', $module));
+
+        /** @var AppDir $dir */
+        $dir = dirname($fileName, 3);
+        assert($dir !== '.');
+
+        return $dir;
     }
 }

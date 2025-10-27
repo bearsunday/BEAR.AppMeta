@@ -6,18 +6,20 @@ namespace BEAR\AppMeta;
 
 use BEAR\Resource\ResourceObject;
 
+/**
+ * @psalm-import-type UriPath from Types
+ * @psalm-import-type FilePath from Types
+ */
 final class ResMeta
 {
-    /** @param class-string<ResourceObject> $class */
+    /**
+     * @param UriPath                      $uriPath  URI path
+     * @param class-string<ResourceObject> $class    Resource class name
+     * @param FilePath                     $filePath File path
+     */
     public function __construct(
-        /**
-         * URI path
-         */
         public string $uriPath,
         public string $class,
-        /**
-         * File path
-         */
         public string $filePath,
     ) {
     }

@@ -6,6 +6,6 @@ namespace BEAR\AppMeta\Exception;
 
 use LogicException;
 
-class NotWritableException extends LogicException
+final class NotWritableException extends LogicException
 {
 }
