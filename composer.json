@@ -8,7 +8,7 @@
     "require": {
         "php": "^8.1",
         "koriym/psr4list": "^1.4",
-        "bear/resource": "^1.0"
+        "bear/resource": "^1.26"
     },
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.4",
