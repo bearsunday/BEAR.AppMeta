@@ -37,16 +37,16 @@ abstract class AbstractAppMeta
      *
      * @var AppName
      */
-    public $name;
+    public string $name;
 
     /** @var AppDir */
-    public $appDir;
+    public string $appDir;
 
     /** @var TmpDir */
-    public $tmpDir;
+    public string $tmpDir;
 
     /** @var LogDir */
-    public $logDir;
+    public string $logDir;
 
     /** @return Generator<array{0: class-string<ResourceObject>, 1: FilePath}> */
     public function getResourceListGenerator(): Generator

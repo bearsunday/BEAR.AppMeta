@@ -18,9 +18,9 @@ final class ResMeta
      * @param FilePath                     $filePath File path
      */
     public function __construct(
-        public string $uriPath,
-        public string $class,
-        public string $filePath,
+        public readonly string $uriPath,
+        public readonly string $class,
+        public readonly string $filePath,
     ) {
     }
 }
