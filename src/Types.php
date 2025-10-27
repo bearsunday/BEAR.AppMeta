@@ -17,8 +17,11 @@ namespace BEAR\AppMeta;
  * @psalm-type LogDir = non-empty-string
  * @psalm-type UriPath = non-empty-string
  * @psalm-type FilePath = non-empty-string
- * @psalm-type Scheme = non-empty-string
+ * @psalm-type Scheme = 'app'|'page'|'*'
  */
 final class Types
 {
+    private function __construct()
+    {
+    }
 }
