@@ -16,7 +16,6 @@ use function dirname;
 use function file_put_contents;
 use function sort;
 use function str_replace;
-use function var_dump;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -43,7 +42,7 @@ class MetaTest extends TestCase
         $classes = $files = [];
         foreach ($meta->getResourceListGenerator() as [$class, $file]) {
             $classes[] = $class;
-            $files[] = $file;
+            $files[] = $this->normalizePath($file);
         }
 
         $expect = [
@@ -67,8 +66,6 @@ class MetaTest extends TestCase
             $this->normalizePath($this->meta->appDir . '/src/Resource/App/Sub/Three.php'),
             $this->normalizePath($this->meta->appDir . '/src/Resource/App/Sub/Sub/Four.php'),
         ];
-        var_dump($expectFiles);
-        var_dump($files);
         sort($expectFiles);
         sort($files);
         $this->assertSame($expectFiles, $files);

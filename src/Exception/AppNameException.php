@@ -6,6 +6,6 @@ namespace BEAR\AppMeta\Exception;
 
 use LogicException;
 
-class AppNameException extends LogicException
+final class AppNameException extends LogicException
 {
 }
