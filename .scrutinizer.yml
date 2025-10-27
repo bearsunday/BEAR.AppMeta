@@ -8,8 +8,8 @@ build:
                 override: true
             dependencies:
                 before:
-                    - apt-get update -qq
-                    - apt-get install -y libssl-dev pkg-config
+                    - sudo apt-get update -qq
+                    - sudo apt-get install -y libssl-dev pkg-config
             tests:
                 override:
                     - php-scrutinizer-run
