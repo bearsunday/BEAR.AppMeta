@@ -21,6 +21,7 @@ namespace BEAR\AppMeta;
  */
 final class Types
 {
+    /** @codeCoverageIgnore */
     private function __construct()
     {
     }
