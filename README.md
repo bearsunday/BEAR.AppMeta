@@ -28,9 +28,13 @@ $appMeta = new Meta('MyVendor\HelloWorld');
 
 // Access metadata properties
 echo $appMeta->name;    // MyVendor\HelloWorld
-echo $appMeta->appDir;  // /path/to/MyVendor/HelloWorld/src
-echo $appMeta->logDir;  // /path/to/MyVendor/HelloWorld/var/log
-echo $appMeta->tmpDir;  // /path/to/MyVendor/HelloWorld/var/tmp
+echo $appMeta->appDir;  // /path/to/project
+echo $appMeta->logDir;  // /path/to/project/var/log/{context}
+echo $appMeta->tmpDir;  // /path/to/project/var/tmp/{context}
+
+// Optional path overrides (null keeps the defaults above):
+// new Meta($name, $context, $appDir, tmpDir: '/var/tmp/my-app', logDir: '/var/log/my-app');
+// Environment reading belongs to the application, not Meta.
 ```
 
 ### Fetching Resource Metadata
