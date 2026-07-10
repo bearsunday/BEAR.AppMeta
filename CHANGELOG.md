@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.11.0] - 2026-07-10
+
+### Added
+- Optional `$tmpDir` and `$logDir` constructor arguments on `Meta` (defaults unchanged: `{appDir}/var/tmp/{context}` and `{appDir}/var/log/{context}`) (#41)
+
+### Changed
+- Centralize directory creation and writability checks in `ensureDir()`
+- Default path segments use `/` (portable on Windows PHP)
 
 ## [1.10.0] - 2025-10-27
 
@@ -33,5 +40,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Windows path separator issues in tests
 - Add descriptive assert messages for better debugging
 
-[Unreleased]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.10.0...HEAD
+[1.11.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.10.0...1.11.0
 [1.10.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.9.0...1.10.0
