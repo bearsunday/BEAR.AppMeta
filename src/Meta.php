@@ -42,7 +42,6 @@ final class Meta extends AbstractAppMeta
     ) {
         $this->name = $name;
         $this->appDir = $appDir !== '' ? $appDir : $this->getAppDir($name);
-        // PHP accepts '/' on Windows for filesystem APIs (mkdir, file_exists, …).
         $this->tmpDir = $this->ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
         $this->logDir = $this->ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
     }
