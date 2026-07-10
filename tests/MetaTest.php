@@ -16,6 +16,8 @@ use function dirname;
 use function file_put_contents;
 use function sort;
 use function str_replace;
+use function sys_get_temp_dir;
+use function uniqid;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -82,6 +84,18 @@ class MetaTest extends TestCase
     {
         new Meta('FakeVendor\HelloWorld', 'test-app');
         $this->assertFileExists($this->normalizePath(__DIR__ . '/Fake/fake-app/var/tmp/test-app/not-cleared.txt'));
+    }
+
+    public function testCustomTmpAndLogDir(): void
+    {
+        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-app-meta-' . uniqid();
+        $tmpDir = $base . DIRECTORY_SEPARATOR . 'tmp';
+        $logDir = $base . DIRECTORY_SEPARATOR . 'log';
+        $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', '', $tmpDir, $logDir);
+        $this->assertSame($this->normalizePath($tmpDir), $this->normalizePath($meta->tmpDir));
+        $this->assertSame($this->normalizePath($logDir), $this->normalizePath($meta->logDir));
+        $this->assertDirectoryExists($meta->tmpDir);
+        $this->assertDirectoryExists($meta->logDir);
     }
 
     private function normalizePath(string $path): string
