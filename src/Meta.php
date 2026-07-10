@@ -17,8 +17,6 @@ use function mkdir;
 use function rtrim;
 use function sprintf;
 
-use const DIRECTORY_SEPARATOR;
-
 /**
  * @psalm-import-type AppName from Types
  * @psalm-import-type Context from Types
@@ -44,12 +42,9 @@ final class Meta extends AbstractAppMeta
     ) {
         $this->name = $name;
         $this->appDir = $appDir !== '' ? $appDir : $this->getAppDir($name);
-        $this->tmpDir = $this->ensureDir(
-            $tmpDir ?? $this->appDir . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . $context,
-        );
-        $this->logDir = $this->ensureDir(
-            $logDir ?? $this->appDir . DIRECTORY_SEPARATOR . 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . $context,
-        );
+        // PHP accepts '/' on Windows for filesystem APIs (mkdir, file_exists, …).
+        $this->tmpDir = $this->ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
+        $this->logDir = $this->ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
     }
 
     /**
