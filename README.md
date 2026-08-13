@@ -27,13 +27,20 @@ use BEAR\AppMeta\Meta;
 $appMeta = new Meta('MyVendor\HelloWorld');
 
 // Access metadata properties
-echo $appMeta->name;    // MyVendor\HelloWorld
-echo $appMeta->appDir;  // /path/to/project
-echo $appMeta->logDir;  // /path/to/project/var/log/{context}
-echo $appMeta->tmpDir;  // /path/to/project/var/tmp/{context}
+echo $appMeta->name;      // MyVendor\HelloWorld
+echo $appMeta->appDir;    // /path/to/project
+echo $appMeta->logDir;    // /path/to/project/var/log/{context}
+echo $appMeta->tmpDir;    // /path/to/project/var/tmp/{context}
+echo $appMeta->scriptDir; // /path/to/project/var/tmp/{context}/di
 
-// Optional path overrides (null keeps the defaults above):
-// new Meta($name, $context, $appDir, tmpDir: '/var/tmp/my-app', logDir: '/var/log/my-app');
+// A read-only deployment where only /tmp is writable (Vercel and the like):
+$appMeta = new Meta('MyVendor\HelloWorld', 'prod-app', tmpDir: '/tmp');
+echo $appMeta->tmpDir;    // /tmp/MyVendor/HelloWorld/prod-app
+echo $appMeta->scriptDir; // /path/to/project/var/tmp/prod-app/di
+
+// A given base is shared - a deploy hands one directory and knows neither app nor context - so
+// both are layered under it. Compiled scripts are a build output and stay under appDir: they ship
+// in the artifact, so a cold start reads them instead of compiling again.
 // Environment reading belongs to the application, not Meta.
 ```
 

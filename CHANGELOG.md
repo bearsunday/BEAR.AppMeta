@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.12.0] - 2026-08-13
+
+### Added
+- `Meta::$scriptDir` — compiled DI script directory, and an optional `$scriptDir` constructor argument (default: `{appDir}/var/tmp/{context}/di`)
+
+### Changed
+- A given `$tmpDir` / `$logDir` / `$scriptDir` is treated as a shared base and layered by app and context (`/tmp` → `/tmp/MyVendor/HelloWorld/prod-app`); 1.11.0 took it verbatim, so two apps or contexts handed one directory answered with each other's DI scripts and cache entries
+- `$scriptDir` does not follow a `$tmpDir` override: compiled scripts are a build output that ships in the deployment artifact, so a cold start on a read-only platform reads them instead of compiling again
+
 ## [1.11.0] - 2026-07-10
 
 ### Added

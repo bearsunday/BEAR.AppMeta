@@ -25,6 +25,7 @@ use const DIRECTORY_SEPARATOR;
  * @psalm-import-type AppName from Types
  * @psalm-import-type AppDir from Types
  * @psalm-import-type TmpDir from Types
+ * @psalm-import-type ScriptDir from Types
  * @psalm-import-type LogDir from Types
  * @psalm-import-type UriPath from Types
  * @psalm-import-type FilePath from Types
@@ -44,6 +45,9 @@ abstract class AbstractAppMeta
 
     /** @var TmpDir */
     public string $tmpDir;
+
+    /** @var ScriptDir */
+    public string $scriptDir;
 
     /** @var LogDir */
     public string $logDir;
