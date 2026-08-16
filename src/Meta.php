@@ -55,10 +55,10 @@ final class Meta extends AbstractAppMeta
      *
      * A boot must pass what the compile passed: differ on any argument and they read different files.
      *
-     * @param AppName       $name
-     * @param Context       $context
-     * @param AppDir        $appDir
-     * @param WriteDir|null $writeDir absolute base outside the application directory
+     * @param AppName     $name
+     * @param Context     $context
+     * @param AppDir      $appDir
+     * @param string|null $writeDir absolute base outside the application directory, checked here
      *
      * @throws WriteDirNotAbsoluteException
      */
@@ -72,6 +72,8 @@ final class Meta extends AbstractAppMeta
         if (! preg_match('#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#', $writeDir)) {
             throw new WriteDirNotAbsoluteException($writeDir);
         }
+
+        assert($writeDir !== '');
 
         $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;
         $meta = new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
