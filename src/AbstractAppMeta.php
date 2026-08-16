@@ -26,6 +26,7 @@ use const DIRECTORY_SEPARATOR;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
+ * @psalm-import-type WriteDir from Types
  * @psalm-import-type UriPath from Types
  * @psalm-import-type FilePath from Types
  * @psalm-import-type Scheme from Types
@@ -47,6 +48,13 @@ abstract class AbstractAppMeta
 
     /** @var LogDir */
     public string $logDir;
+
+    /**
+     * The base directory this application was placed under, null when it was not placed under one
+     *
+     * @var WriteDir|null
+     */
+    public string|null $writeDir = null;
 
     /** @return Generator<array{0: class-string<ResourceObject>, 1: FilePath}> */
     public function getResourceListGenerator(): Generator
