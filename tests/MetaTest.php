@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
+use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use FakeVendor\HelloWorld\Resource\App\One;
 use FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four;
 use FakeVendor\HelloWorld\Resource\App\Sub\Three;
@@ -121,6 +122,19 @@ class MetaTest extends TestCase
     {
         $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), null);
         $this->assertSame($this->normalizePath($meta->appDir . '/var/tmp/prod-app'), $this->normalizePath($meta->tmpDir));
+    }
+
+    /** @dataProvider baseThatTheCurrentDirectoryResolves */
+    public function testCreateRefusesABaseThatIsNotAbsolute(string $base): void
+    {
+        $this->expectException(WriteDirNotAbsoluteException::class);
+        Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), $base);
+    }
+
+    /** @return array<string, array{0: string}> */
+    public static function baseThatTheCurrentDirectoryResolves(): array
+    {
+        return ['empty' => [''], 'relative' => ['var/write'], 'dot' => ['./write']];
     }
 
     public function testAppDirResolvesFromTheAppModule(): void

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Meta::create($name, $context, $appDir, $writeDir)` places an application under `{writeDir}/{Vendor}/{Project}/{context}`, or its own `var/` when null
 - `$writeDir` on `AbstractAppMeta`: the base an application writes under, carried rather than derived
 - `Meta::appDir($name)` resolves an application directory from its name
+- `Meta::create()` refuses a write directory the current directory would resolve, with `WriteDirNotAbsoluteException`
 
 ## [1.11.0] - 2026-07-10
 

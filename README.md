@@ -37,7 +37,7 @@ echo $appMeta->tmpDir;  // /path/to/project/var/tmp/{context}
 
 // An application that may not write in its own directory - a read-only image, an archive -
 // is placed under a writable base, and carries it:
-$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appDir, '/mnt/write');
+$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appMeta->appDir, '/mnt/write');
 echo $appMeta->tmpDir;    // /mnt/write/MyVendor/HelloWorld/prod-app/tmp
 echo $appMeta->writeDir;  // /mnt/write
 

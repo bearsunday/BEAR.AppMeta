@@ -6,6 +6,7 @@ namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
+use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use ReflectionClass;
 
 use function assert;
@@ -14,6 +15,7 @@ use function dirname;
 use function file_exists;
 use function is_dir;
 use function mkdir;
+use function preg_match;
 use function rtrim;
 use function sprintf;
 use function str_replace;
@@ -57,11 +59,18 @@ final class Meta extends AbstractAppMeta
      * @param Context       $context
      * @param AppDir        $appDir
      * @param WriteDir|null $writeDir absolute base outside the application directory
+     *
+     * @throws WriteDirNotAbsoluteException
      */
     public static function create(string $name, string $context, string $appDir, string|null $writeDir): self
     {
         if ($writeDir === null) {
             return new self($name, $context, $appDir);
+        }
+
+        // A base the current directory resolves lands somewhere else on the next run
+        if (! preg_match('#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#', $writeDir)) {
+            throw new WriteDirNotAbsoluteException($writeDir);
         }
 
         $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;

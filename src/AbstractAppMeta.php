@@ -50,7 +50,7 @@ abstract class AbstractAppMeta
     public string $logDir;
 
     /**
-     * The base directory this application writes under, null when it writes in its own var/
+     * The base directory this application was placed under, null when it was not placed under one
      *
      * @var WriteDir|null
      */
