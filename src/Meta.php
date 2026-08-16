@@ -58,7 +58,7 @@ final class Meta extends AbstractAppMeta
      * @param AppName     $name
      * @param Context     $context
      * @param AppDir      $appDir
-     * @param string|null $writeDir absolute base outside the application directory, checked here
+     * @param string|null $writeDir absolute base, checked here; where it lies is the caller's business
      *
      * @throws WriteDirNotAbsoluteException
      */
