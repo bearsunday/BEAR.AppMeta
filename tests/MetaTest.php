@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
+use BEAR\AppMeta\Exception\AppNameException;
 use FakeVendor\HelloWorld\Resource\App\One;
 use FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four;
 use FakeVendor\HelloWorld\Resource\App\Sub\Three;
@@ -96,6 +97,41 @@ class MetaTest extends TestCase
         $this->assertSame($this->normalizePath($logDir), $this->normalizePath($meta->logDir));
         $this->assertDirectoryExists($meta->tmpDir);
         $this->assertDirectoryExists($meta->logDir);
+    }
+
+    public function testCreateWritesUnderTheGivenBase(): void
+    {
+        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
+        $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), $base);
+        $this->assertSame($this->normalizePath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $this->normalizePath($meta->tmpDir));
+        $this->assertSame($this->normalizePath($base . '/FakeVendor/HelloWorld/prod-app/log'), $this->normalizePath($meta->logDir));
+        $this->assertDirectoryExists($meta->tmpDir);
+        $this->assertDirectoryExists($meta->logDir);
+    }
+
+    public function testCreateCarriesTheBaseItWasGiven(): void
+    {
+        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $this->assertSame($base, Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, $base)->writeDir);
+        $this->assertNull(Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, null)->writeDir);
+    }
+
+    public function testCreateWithoutBaseWritesInItsOwnVar(): void
+    {
+        $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), null);
+        $this->assertSame($this->normalizePath($meta->appDir . '/var/tmp/prod-app'), $this->normalizePath($meta->tmpDir));
+    }
+
+    public function testAppDirResolvesFromTheAppModule(): void
+    {
+        $this->assertSame($this->meta->appDir, Meta::appDir('FakeVendor\\HelloWorld'));
+    }
+
+    public function testAppDirRefusesAnAppItCannotLocate(): void
+    {
+        $this->expectException(AppNameException::class);
+        Meta::appDir('No\\Such\\App');
     }
 
     private function normalizePath(string $path): string

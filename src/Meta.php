@@ -16,6 +16,7 @@ use function is_dir;
 use function mkdir;
 use function rtrim;
 use function sprintf;
+use function str_replace;
 
 /**
  * @psalm-import-type AppName from Types
@@ -23,6 +24,7 @@ use function sprintf;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
+ * @psalm-import-type WriteDir from Types
  */
 final class Meta extends AbstractAppMeta
 {
@@ -41,9 +43,32 @@ final class Meta extends AbstractAppMeta
         string|null $logDir = null,
     ) {
         $this->name = $name;
-        $this->appDir = $appDir !== '' ? $appDir : $this->getAppDir($name);
-        $this->tmpDir = $this->ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
-        $this->logDir = $this->ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
+        $this->appDir = $appDir !== '' ? $appDir : self::appDir($name);
+        $this->tmpDir = self::ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
+        $this->logDir = self::ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
+    }
+
+    /**
+     * Meta writing under {writeDir}/{Vendor}/{Project}/{context}, or its own var/ when null.
+     *
+     * A boot must pass what the compile passed: differ on any argument and they read different files.
+     *
+     * @param AppName       $name
+     * @param Context       $context
+     * @param AppDir        $appDir
+     * @param WriteDir|null $writeDir absolute base outside the application directory
+     */
+    public static function create(string $name, string $context, string $appDir, string|null $writeDir): self
+    {
+        if ($writeDir === null) {
+            return new self($name, $context, $appDir);
+        }
+
+        $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;
+        $meta = new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
+        $meta->writeDir = $writeDir;
+
+        return $meta;
     }
 
     /**
@@ -51,7 +76,7 @@ final class Meta extends AbstractAppMeta
      *
      * @return non-empty-string
      */
-    private function ensureDir(string $dir): string
+    private static function ensureDir(string $dir): string
     {
         $dir = rtrim($dir, '/\\');
         assert($dir !== '');
@@ -63,11 +88,15 @@ final class Meta extends AbstractAppMeta
     }
 
     /**
+     * The directory of an application, resolved from its AppModule.
+     *
      * @param AppName $name
      *
      * @return AppDir
+     *
+     * @throws AppNameException
      */
-    private function getAppDir(string $name): string
+    public static function appDir(string $name): string
     {
         $module = $name . '\Module\AppModule';
         if (! class_exists($module)) {
