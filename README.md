@@ -34,6 +34,13 @@ echo $appMeta->tmpDir;  // /path/to/project/var/tmp/{context}
 
 // Optional path overrides (null keeps the defaults above):
 // new Meta($name, $context, $appDir, tmpDir: '/var/tmp/my-app', logDir: '/var/log/my-app');
+
+// An application that may not write in its own directory - a read-only image, an archive -
+// is placed under a writable base, and carries it:
+$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appDir, '/mnt/write');
+echo $appMeta->tmpDir;    // /mnt/write/MyVendor/HelloWorld/prod-app/tmp
+echo $appMeta->writeDir;  // /mnt/write
+
 // Environment reading belongs to the application, not Meta.
 ```
 
