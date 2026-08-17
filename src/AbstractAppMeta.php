@@ -44,7 +44,11 @@ abstract class AbstractAppMeta
     /** @var AppDir */
     public string $appDir;
 
-    /** @var TmpDir */
+    /**
+     * Data derived at runtime
+     *
+     * @var TmpDir
+     */
     public string $tmpDir;
 
     /** @var LogDir */
