@@ -46,6 +46,7 @@ final class Meta extends AbstractAppMeta
     ) {
         $this->name = $name;
         $this->appDir = $appDir !== '' ? $appDir : self::appDir($name);
+        $this->buildDir = $this->appDir . '/var/build/' . $context;
         $this->tmpDir = self::ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
         $this->logDir = self::ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
     }

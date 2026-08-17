@@ -26,6 +26,7 @@ use const DIRECTORY_SEPARATOR;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
+ * @psalm-import-type BuildDir from Types
  * @psalm-import-type WriteDir from Types
  * @psalm-import-type UriPath from Types
  * @psalm-import-type FilePath from Types
@@ -48,6 +49,15 @@ abstract class AbstractAppMeta
 
     /** @var LogDir */
     public string $logDir;
+
+    /**
+     * Where a compile puts what it produced, {appDir}/var/build/{context}
+     *
+     * Fixed to appDir even when $writeDir is set, and not created here: a build ships inside the application, which may be read-only or a phar.
+     *
+     * @var BuildDir
+     */
+    public string $buildDir;
 
     /**
      * The base directory this application was placed under, null when it was not placed under one
