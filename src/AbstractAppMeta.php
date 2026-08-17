@@ -51,9 +51,7 @@ abstract class AbstractAppMeta
     public string $logDir;
 
     /**
-     * Where a compile puts what it produced, {appDir}/var/build/{context}
-     *
-     * Fixed to appDir even when $writeDir is set, and not created here: a build ships inside the application, which may be read-only or a phar.
+     * Artifacts derived from the source
      *
      * @var BuildDir
      */
