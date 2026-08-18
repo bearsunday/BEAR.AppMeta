@@ -78,7 +78,6 @@ final class Meta extends AbstractAppMeta
 
         $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;
         $meta = new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
-        $meta->writeDir = $writeDir;
 
         return $meta;
     }

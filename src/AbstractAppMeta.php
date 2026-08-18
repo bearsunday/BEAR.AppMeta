@@ -61,13 +61,6 @@ abstract class AbstractAppMeta
      */
     public string $buildDir;
 
-    /**
-     * The base directory this application was placed under, null when it was not placed under one
-     *
-     * @var WriteDir|null
-     */
-    public string|null $writeDir = null;
-
     /** @return Generator<array{0: class-string<ResourceObject>, 1: FilePath}> */
     public function getResourceListGenerator(): Generator
     {
