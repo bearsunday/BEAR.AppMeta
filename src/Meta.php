@@ -27,6 +27,7 @@ use function str_replace;
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
  * @psalm-import-type WriteDir from Types
+ * @psalm-import-type BuildDir from Types
  */
 final class Meta extends AbstractAppMeta
 {
@@ -46,9 +47,26 @@ final class Meta extends AbstractAppMeta
     ) {
         $this->name = $name;
         $this->appDir = $appDir !== '' ? $appDir : self::appDir($name);
-        $this->buildDir = $this->appDir . '/var/build/' . $context;
+        $this->buildDir = self::buildDir($this->appDir, $context);
         $this->tmpDir = self::ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
         $this->logDir = self::ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
+    }
+
+    /**
+     * Where a compile of $context puts what it produced.
+     *
+     * The rule behind `$buildDir`, for a caller holding no Meta: a pack reads the directories of
+     * applications it never boots, and a Meta of each would create their tmp and log inside the
+     * tree being packed.
+     *
+     * @param AppDir  $appDir
+     * @param Context $context
+     *
+     * @return BuildDir
+     */
+    public static function buildDir(string $appDir, string $context): string
+    {
+        return $appDir . '/var/build/' . $context;
     }
 
     /**

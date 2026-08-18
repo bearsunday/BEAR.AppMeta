@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - `$buildDir` on `AbstractAppMeta`: `{appDir}/var/build/{context}`, fixed to `appDir` regardless of `$writeDir` and not created
+- `Meta::buildDir($appDir, $context)`: the rule behind `$buildDir` without side effects, for a caller that reads a directory it never boots
 
 ### Deprecated
 - `$writeDir` on `AbstractAppMeta`: still filled for released `bear/package` versions that read it, gone in the next minor
