@@ -78,6 +78,8 @@ final class Meta extends AbstractAppMeta
 
         $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;
         $meta = new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
+        /** @psalm-suppress DeprecatedProperty the factory still fills what releases read */
+        $meta->writeDir = $writeDir;
 
         return $meta;
     }

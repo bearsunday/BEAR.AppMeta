@@ -61,6 +61,12 @@ abstract class AbstractAppMeta
      */
     public string $buildDir;
 
+    /**
+     * @var WriteDir|null
+     * @deprecated Do not use.
+     */
+    public string|null $writeDir = null;
+
     /** @return Generator<array{0: class-string<ResourceObject>, 1: FilePath}> */
     public function getResourceListGenerator(): Generator
     {
