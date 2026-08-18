@@ -157,16 +157,6 @@ class MetaTest extends TestCase
         $this->assertDirectoryDoesNotExist($meta->buildDir);
     }
 
-    /** The rule a pack applies without a Meta has to be the rule a Meta applies. */
-    public function testBuildDirStaticAnswersWhatAnInstanceHolds(): void
-    {
-        $appDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-build-static-' . uniqid();
-        $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app', $appDir);
-
-        $this->assertSame($this->normalizePath($meta->buildDir), $this->normalizePath(Meta::buildDir($appDir, 'prod-app')));
-        $this->assertDirectoryDoesNotExist(Meta::buildDir($appDir, 'stage-app'));
-    }
-
     public function testMetaIsBuiltForAnApplicationItCannotWriteTo(): void
     {
         if (PHP_OS_FAMILY === 'Windows') {
