@@ -4,20 +4,29 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
+use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\Resource\ResourceObject;
 use Generator;
 use Koriym\Psr4List\Psr4List;
+use ReflectionClass;
 
 use function array_slice;
 use function array_walk;
 use function assert;
+use function class_exists;
+use function dirname;
 use function explode;
 use function implode;
 use function is_a;
 use function ltrim;
 use function preg_replace;
+use function realpath;
 use function sprintf;
+use function str_replace;
+use function str_starts_with;
+use function strlen;
 use function strtolower;
+use function substr;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -26,6 +35,7 @@ use const DIRECTORY_SEPARATOR;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
+ * @psalm-import-type BuildDir from Types
  * @psalm-import-type WriteDir from Types
  * @psalm-import-type UriPath from Types
  * @psalm-import-type FilePath from Types
@@ -43,18 +53,88 @@ abstract class AbstractAppMeta
     /** @var AppDir */
     public string $appDir;
 
-    /** @var TmpDir */
+    /**
+     * Data derived at runtime
+     *
+     * @var TmpDir
+     */
     public string $tmpDir;
 
     /** @var LogDir */
     public string $logDir;
 
     /**
-     * The base directory this application was placed under, null when it was not placed under one
+     * Artifacts derived from the source
      *
+     * @var BuildDir
+     */
+    public string $buildDir;
+
+    /**
      * @var WriteDir|null
+     * @deprecated Do not use.
      */
     public string|null $writeDir = null;
+
+    /**
+     * Re-point the paths under the application directory when it has moved or changed spelling.
+     *
+     * A serialized Meta was made on the build machine. Only paths below appDir go stale
+     * when the tree or archive moves; the rest (a writeDir base, a name-derived rule)
+     * is move-invariant by contract and left untouched.
+     */
+    public function __wakeup(): void
+    {
+        $from = str_replace('\\', '/', $this->appDir);
+        /** @var AppDir $to rebased paths spell forward-slashed, whatever the platform */
+        $to = str_replace('\\', '/', self::appDir($this->name));
+        if ($from === $to) {
+            return;
+        }
+
+        foreach (['tmpDir', 'logDir', 'buildDir'] as $dir) {
+            /** @var string|null $path null only for 1.12 payloads, which carry no buildDir */
+            $path = $this->$dir ?? null;
+            if ($path === null) {
+                continue;
+            }
+
+            $path = str_replace('\\', '/', $path);
+            if (str_starts_with($path, $from . '/')) {
+                $this->$dir = $to . substr($path, strlen($from));
+            }
+        }
+
+        $this->appDir = $to;
+    }
+
+    /**
+     * The directory of an application, resolved from its AppModule.
+     *
+     * @param AppName $name
+     *
+     * @return AppDir the canonical spelling
+     *
+     * @throws AppNameException
+     */
+    public static function appDir(string $name): string
+    {
+        $module = $name . '\Module\AppModule';
+        if (! class_exists($module)) {
+            throw new AppNameException($name);
+        }
+
+        $fileName = (new ReflectionClass($module))->getFileName();
+        assert($fileName !== false, sprintf('Cannot locate AppModule file: %s', $module));
+
+        $dir = dirname($fileName, 3);
+        $real = realpath($dir);
+
+        /** @var AppDir $canonical */
+        $canonical = $real === false ? $dir : $real;
+
+        return $canonical;
+    }
 
     /** @return Generator<array{0: class-string<ResourceObject>, 1: FilePath}> */
     public function getResourceListGenerator(): Generator

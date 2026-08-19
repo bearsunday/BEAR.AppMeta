@@ -14,14 +14,23 @@ use FakeVendor\HelloWorld\Resource\App\User;
 use FakeVendor\HelloWorld\Resource\Page\Index;
 use PHPUnit\Framework\TestCase;
 
+use function assert;
+use function chmod;
 use function dirname;
 use function file_put_contents;
+use function mkdir;
+use function realpath;
+use function serialize;
 use function sort;
+use function sprintf;
 use function str_replace;
+use function strlen;
 use function sys_get_temp_dir;
 use function uniqid;
+use function unserialize;
 
 use const DIRECTORY_SEPARATOR;
+use const PHP_OS_FAMILY;
 
 class MetaTest extends TestCase
 {
@@ -94,8 +103,8 @@ class MetaTest extends TestCase
         $tmpDir = $base . DIRECTORY_SEPARATOR . 'tmp';
         $logDir = $base . DIRECTORY_SEPARATOR . 'log';
         $meta = new Meta('FakeVendor\HelloWorld', 'prod-app', '', $tmpDir, $logDir);
-        $this->assertSame($this->normalizePath($tmpDir), $this->normalizePath($meta->tmpDir));
-        $this->assertSame($this->normalizePath($logDir), $this->normalizePath($meta->logDir));
+        $this->assertSame(realpath($tmpDir), $meta->tmpDir);
+        $this->assertSame(realpath($logDir), $meta->logDir);
         $this->assertDirectoryExists($meta->tmpDir);
         $this->assertDirectoryExists($meta->logDir);
     }
@@ -104,8 +113,8 @@ class MetaTest extends TestCase
     {
         $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
         $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), $base);
-        $this->assertSame($this->normalizePath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $this->normalizePath($meta->tmpDir));
-        $this->assertSame($this->normalizePath($base . '/FakeVendor/HelloWorld/prod-app/log'), $this->normalizePath($meta->logDir));
+        $this->assertSame(realpath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $meta->tmpDir);
+        $this->assertSame(realpath($base . '/FakeVendor/HelloWorld/prod-app/log'), $meta->logDir);
         $this->assertDirectoryExists($meta->tmpDir);
         $this->assertDirectoryExists($meta->logDir);
     }
@@ -124,6 +133,57 @@ class MetaTest extends TestCase
         $this->assertSame($this->normalizePath($meta->appDir . '/var/tmp/prod-app'), $this->normalizePath($meta->tmpDir));
     }
 
+    public function testBuildDirIsUnderTheApplication(): void
+    {
+        $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app');
+        $this->assertSame($this->normalizePath($meta->appDir . '/var/build/prod-app'), $this->normalizePath($meta->buildDir));
+    }
+
+    public function testBuildDirStaysUnderTheApplicationWhenTmpAndLogFollowTheBase(): void
+    {
+        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, $base);
+        $this->assertSame(realpath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $meta->tmpDir);
+        $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($meta->buildDir));
+    }
+
+    public function testBuildDirSeparatesContexts(): void
+    {
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath((new Meta('FakeVendor\\HelloWorld', 'prod-app'))->buildDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/build/stage-app'), $this->normalizePath((new Meta('FakeVendor\\HelloWorld', 'stage-app'))->buildDir));
+    }
+
+    public function testBuildDirIsNotCreated(): void
+    {
+        $appDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-build-dir-' . uniqid();
+        $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app', $appDir);
+        $this->assertDirectoryExists($meta->tmpDir);
+        $this->assertDirectoryDoesNotExist($meta->buildDir);
+    }
+
+    public function testMetaIsBuiltForAnApplicationItCannotWriteTo(): void
+    {
+        if (PHP_OS_FAMILY === 'Windows') {
+            $this->markTestSkipped('chmod does not write-protect a directory on Windows.');
+        }
+
+        $appDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-read-only-' . uniqid();
+        mkdir($appDir . '/var', 0777, true);
+        chmod($appDir . '/var', 0555);
+        chmod($appDir, 0555);
+
+        try {
+            $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid());
+            $this->assertSame($meta->appDir . '/var/build/prod-app', $meta->buildDir);
+            $this->assertDirectoryDoesNotExist($meta->buildDir);
+        } finally {
+            chmod($appDir, 0777);
+            chmod($appDir . '/var', 0777);
+        }
+    }
+
     /** @dataProvider baseThatTheCurrentDirectoryResolves */
     public function testCreateRefusesABaseThatIsNotAbsolute(string $base): void
     {
@@ -135,6 +195,91 @@ class MetaTest extends TestCase
     public static function baseThatTheCurrentDirectoryResolves(): array
     {
         return ['empty' => [''], 'relative' => ['var/write'], 'dot' => ['./write']];
+    }
+
+    public function testUnserializeRelocatesPathsUnderTheAppDir(): void
+    {
+        $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app');
+        // spellings from a build machine the application has left since
+        $meta->appDir = '/build/machine/app';
+        $meta->tmpDir = '/build/machine/app/var/tmp/prod-app';
+        $meta->logDir = '/build/machine/app/var/log/prod-app';
+        $meta->buildDir = '/build/machine/app/var/build/prod-app';
+
+        $woke = unserialize(serialize($meta));
+        assert($woke instanceof Meta);
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $this->assertSame($this->normalizePath($appDir), $this->normalizePath($woke->appDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/tmp/prod-app'), $this->normalizePath($woke->tmpDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/log/prod-app'), $this->normalizePath($woke->logDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($woke->buildDir));
+    }
+
+    public function testUnserializeAcceptsAPayloadWithoutBuildDir(): void
+    {
+        // what 1.12 baked: five fields, no buildDir
+        $field = static fn (string $key, string $value): string => sprintf('s:%d:"%s";s:%d:"%s";', strlen($key), $key, strlen($value), $value);
+        $payload = 'O:17:"BEAR\\AppMeta\\Meta":5:{'
+            . $field('name', 'FakeVendor\\HelloWorld')
+            . $field('appDir', '/build/machine/app')
+            . $field('tmpDir', '/build/machine/app/var/tmp/prod-app')
+            . $field('logDir', '/build/machine/app/var/log/prod-app')
+            . 's:8:"writeDir";N;}';
+
+        $woke = unserialize($payload);
+        assert($woke instanceof Meta);
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $this->assertSame($this->normalizePath($appDir . '/var/tmp/prod-app'), $this->normalizePath($woke->tmpDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/log/prod-app'), $this->normalizePath($woke->logDir));
+    }
+
+    public function testWakeupKeepsPathsOutsideTheAppDir(): void
+    {
+        $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app');
+        $meta->appDir = '/build/machine/app';
+        $meta->tmpDir = '/write/FakeVendor/HelloWorld/prod-app/tmp'; // writeDir-derived: move-invariant
+        $meta->logDir = '/logs/FakeVendor/HelloWorld'; // a custom rule: move-invariant
+        $meta->buildDir = '/build/machine/app/var/build/prod-app';
+
+        $meta->__wakeup();
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $this->assertSame($this->normalizePath($appDir), $this->normalizePath($meta->appDir));
+        $this->assertSame('/write/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
+        $this->assertSame('/logs/FakeVendor/HelloWorld', $meta->logDir);
+        $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($meta->buildDir));
+    }
+
+    public function testWakeupIsQuietWhenTheApplicationHasNotMoved(): void
+    {
+        $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app');
+        $before = [$meta->appDir, $meta->tmpDir, $meta->logDir, $meta->buildDir];
+        $meta->__wakeup();
+        $this->assertSame($before, [$meta->appDir, $meta->tmpDir, $meta->logDir, $meta->buildDir]);
+    }
+
+    public function testTmpAndLogDirComeInOneSpelling(): void
+    {
+        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-app-meta-' . uniqid();
+        $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app', '', $base . '/tmp', $base . '/log');
+        $this->assertSame(realpath($meta->tmpDir), $meta->tmpDir);
+        $this->assertSame(realpath($meta->logDir), $meta->logDir);
+    }
+
+    public function testRefusesAnAppDirThatIsNotAbsolute(): void
+    {
+        $this->expectException(WriteDirNotAbsoluteException::class);
+        new Meta('FakeVendor\\HelloWorld', 'prod-app', 'relative/app', sys_get_temp_dir() . '/bear-tmp-' . uniqid(), sys_get_temp_dir() . '/bear-log-' . uniqid());
+    }
+
+    /**
+     * @dataProvider baseThatTheCurrentDirectoryResolves
+     * @psalm-suppress InvalidArgument the point is passing an unusable dir
+     */
+    public function testRefusesATmpDirThatIsNotAbsolute(string $tmpDir): void
+    {
+        $this->expectException(WriteDirNotAbsoluteException::class);
+        // @phpstan-ignore argument.type (the point is passing an unusable dir)
+        new Meta('FakeVendor\\HelloWorld', 'prod-app', '', $tmpDir);
     }
 
     public function testAppDirResolvesFromTheAppModule(): void
