@@ -10,7 +10,7 @@
 
 ## Features
 
-- **Application Metadata Management**: Retrieve directory paths such as `appDir`, `logDir`, and `tmpDir` with ease.
+- **Application Metadata Management**: Retrieve directory paths such as `appDir`, `logDir`, `tmpDir`, and `buildDir` with ease.
 - **Resource Metadata Generator**: Use a generator to efficiently fetch metadata for resources in your application.
 
 ---
@@ -18,31 +18,29 @@
 
 ### Accessing Application Metadata
 
-The `Meta` class provides access to application metadata, including directory paths:
-
 ```php
 use BEAR\AppMeta\Meta;
 
-// Initialize with your application's namespace
 $appMeta = new Meta('MyVendor\HelloWorld');
-
-// Access metadata properties
-echo $appMeta->name;     // MyVendor\HelloWorld
-echo $appMeta->appDir;   // /path/to/project
-echo $appMeta->logDir;   // /path/to/project/var/log/{context}
-echo $appMeta->tmpDir;   // /path/to/project/var/tmp/{context}
-echo $appMeta->buildDir; // /path/to/project/var/build/{context}
-
-// Optional path overrides (null keeps the defaults above):
-// new Meta($name, $context, $appDir, tmpDir: '/var/tmp/my-app', logDir: '/var/log/my-app');
-
-// An application that may not write in its own directory - a read-only image, an archive -
-// is placed under a writable base:
-$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appMeta->appDir, '/mnt/write');
-echo $appMeta->tmpDir;    // /mnt/write/MyVendor/HelloWorld/prod-app/tmp
-
-// Environment reading belongs to the application, not Meta.
 ```
+
+- `name` — the application namespace (`MyVendor\HelloWorld`)
+- `appDir` — the application directory
+- `tmpDir` — data the running application writes
+- `logDir` — log files
+- `buildDir` — artifacts a build generates once and every run reads (compiled DI scripts, templates)
+
+Pass `$appDir`, `$tmpDir` or `$logDir` to the constructor to override. `Meta::create()` takes a writable base for a read-only tree or an archive:
+
+```php
+$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appMeta->appDir, '/mnt/write');
+```
+
+Environment reading belongs to the application, not Meta.
+
+### Libraries: take paths from the injected Meta
+
+Do not bind a path read from a Meta into compiled or cached code - the artifact may run somewhere else. Inject `AbstractAppMeta` and read paths at runtime; a restored Meta re-points them to the current location.
 
 ### Fetching Resource Metadata
 
