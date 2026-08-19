@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2026-08-19
+
 ### Added
 - `$buildDir` on `AbstractAppMeta`: `{appDir}/var/build/{context}`, fixed to `appDir` regardless of `$writeDir` and not created
 - `AbstractAppMeta::__wakeup()` re-points paths under `appDir` when the application has moved since serialization
@@ -62,5 +64,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Windows path separator issues in tests
 - Add descriptive assert messages for better debugging
 
+[1.13.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.12.0...1.13.0
 [1.11.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.10.0...1.11.0
 [1.10.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.9.0...1.10.0
