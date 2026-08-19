@@ -22,7 +22,9 @@ use function mkdir;
 use function realpath;
 use function serialize;
 use function sort;
+use function sprintf;
 use function str_replace;
+use function strlen;
 use function sys_get_temp_dir;
 use function uniqid;
 use function unserialize;
@@ -211,6 +213,24 @@ class MetaTest extends TestCase
         $this->assertSame($this->normalizePath($appDir . '/var/tmp/prod-app'), $this->normalizePath($woke->tmpDir));
         $this->assertSame($this->normalizePath($appDir . '/var/log/prod-app'), $this->normalizePath($woke->logDir));
         $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($woke->buildDir));
+    }
+
+    public function testUnserializeAcceptsAPayloadWithoutBuildDir(): void
+    {
+        // what 1.12 baked: five fields, no buildDir
+        $field = static fn (string $key, string $value): string => sprintf('s:%d:"%s";s:%d:"%s";', strlen($key), $key, strlen($value), $value);
+        $payload = 'O:17:"BEAR\\AppMeta\\Meta":5:{'
+            . $field('name', 'FakeVendor\\HelloWorld')
+            . $field('appDir', '/build/machine/app')
+            . $field('tmpDir', '/build/machine/app/var/tmp/prod-app')
+            . $field('logDir', '/build/machine/app/var/log/prod-app')
+            . 's:8:"writeDir";N;}';
+
+        $woke = unserialize($payload);
+        assert($woke instanceof Meta);
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $this->assertSame($this->normalizePath($appDir . '/var/tmp/prod-app'), $this->normalizePath($woke->tmpDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/log/prod-app'), $this->normalizePath($woke->logDir));
     }
 
     public function testWakeupKeepsPathsOutsideTheAppDir(): void
