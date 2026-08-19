@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Removed
+- `$writeDir` on `AbstractAppMeta` (deprecated in 1.13.0). Unserializing a payload that carries it now emits a dynamic-property deprecation on PHP 8.2+; recompile clears it
+
 ## [1.13.0] - 2026-08-19
 
 ### Added
@@ -19,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Canonical spellings make existing compile markers mismatch once: recompile when deploying this release (a writable tree recompiles on first boot; a read-only tree must be rebuilt)
 
 ### Deprecated
-- `$writeDir` on `AbstractAppMeta`: still filled for released `bear/package` versions that read it; removal is a BC break and waits for the next major
+- `$writeDir` on `AbstractAppMeta`: still filled for released `bear/package` versions that read it; removed in the next minor (no major is planned)
 
 ## [1.12.0] - 2026-08-16
 

@@ -119,14 +119,6 @@ class MetaTest extends TestCase
         $this->assertDirectoryExists($meta->logDir);
     }
 
-    public function testCreateCarriesTheBaseItWasGiven(): void
-    {
-        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
-        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
-        $this->assertSame($base, Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, $base)->writeDir);
-        $this->assertNull(Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, null)->writeDir);
-    }
-
     public function testCreateWithoutBaseWritesInItsOwnVar(): void
     {
         $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), null);

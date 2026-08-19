@@ -36,7 +36,6 @@ use const DIRECTORY_SEPARATOR;
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
  * @psalm-import-type BuildDir from Types
- * @psalm-import-type WriteDir from Types
  * @psalm-import-type UriPath from Types
  * @psalm-import-type FilePath from Types
  * @psalm-import-type Scheme from Types
@@ -69,12 +68,6 @@ abstract class AbstractAppMeta
      * @var BuildDir
      */
     public string $buildDir;
-
-    /**
-     * @var WriteDir|null
-     * @deprecated Do not use.
-     */
-    public string|null $writeDir = null;
 
     /**
      * Re-point the paths under the application directory when it has moved or changed spelling.

@@ -21,7 +21,6 @@ use function str_replace;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
- * @psalm-import-type WriteDir from Types
  */
 final class Meta extends AbstractAppMeta
 {
@@ -71,11 +70,8 @@ final class Meta extends AbstractAppMeta
         self::assertAbsolute($writeDir);
 
         $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;
-        $meta = new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
-        /** @psalm-suppress DeprecatedProperty the factory still fills what releases read */
-        $meta->writeDir = $writeDir;
 
-        return $meta;
+        return new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
     }
 
     /**
