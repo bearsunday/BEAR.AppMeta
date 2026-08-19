@@ -265,6 +265,12 @@ class MetaTest extends TestCase
         $this->assertSame(realpath($meta->logDir), $meta->logDir);
     }
 
+    public function testRefusesAnAppDirThatIsNotAbsolute(): void
+    {
+        $this->expectException(WriteDirNotAbsoluteException::class);
+        new Meta('FakeVendor\\HelloWorld', 'prod-app', 'relative/app', sys_get_temp_dir() . '/bear-tmp-' . uniqid(), sys_get_temp_dir() . '/bear-log-' . uniqid());
+    }
+
     /**
      * @dataProvider baseThatTheCurrentDirectoryResolves
      * @psalm-suppress InvalidArgument the point is passing an unusable dir

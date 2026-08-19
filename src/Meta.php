@@ -40,7 +40,10 @@ final class Meta extends AbstractAppMeta
         string|null $logDir = null,
     ) {
         $this->name = $name;
-        $this->appDir = self::normalize($appDir !== '' ? $appDir : self::appDir($name));
+        $appDir = $appDir !== '' ? $appDir : self::appDir($name);
+        // @phpstan-ignore staticMethod.alreadyNarrowedType (the regex check runs at runtime regardless of the type)
+        self::assertAbsolute($appDir);
+        $this->appDir = self::normalize($appDir);
         $this->buildDir = $this->appDir . '/var/build/' . $context;
         $this->tmpDir = self::ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
         $this->logDir = self::ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);

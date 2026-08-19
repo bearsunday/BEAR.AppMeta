@@ -10,14 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - `$buildDir` on `AbstractAppMeta`: `{appDir}/var/build/{context}`, fixed to `appDir` regardless of `$writeDir` and not created
 - `AbstractAppMeta::__wakeup()` re-points paths under `appDir` when the application has moved since serialization
-- `Meta` refuses a relative `$tmpDir`/`$logDir` with `WriteDirNotAbsoluteException`
+- `Meta` refuses a relative `$appDir`, `$tmpDir` or `$logDir` with `WriteDirNotAbsoluteException`
 
 ### Changed
 - `Meta::appDir($name)` moved to `AbstractAppMeta` and returns the canonical spelling, as do `$appDir`, `$tmpDir` and `$logDir`
 - Canonical spellings make existing compile markers mismatch once: recompile when deploying this release (a writable tree recompiles on first boot; a read-only tree must be rebuilt)
 
 ### Deprecated
-- `$writeDir` on `AbstractAppMeta`: still filled for released `bear/package` versions that read it, gone in the next minor
+- `$writeDir` on `AbstractAppMeta`: still filled for released `bear/package` versions that read it; removal is a BC break and waits for the next major
 
 ## [1.12.0] - 2026-08-16
 
