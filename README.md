@@ -27,19 +27,19 @@ use BEAR\AppMeta\Meta;
 $appMeta = new Meta('MyVendor\HelloWorld');
 
 // Access metadata properties
-echo $appMeta->name;    // MyVendor\HelloWorld
-echo $appMeta->appDir;  // /path/to/project
-echo $appMeta->logDir;  // /path/to/project/var/log/{context}
-echo $appMeta->tmpDir;  // /path/to/project/var/tmp/{context}
+echo $appMeta->name;     // MyVendor\HelloWorld
+echo $appMeta->appDir;   // /path/to/project
+echo $appMeta->logDir;   // /path/to/project/var/log/{context}
+echo $appMeta->tmpDir;   // /path/to/project/var/tmp/{context}
+echo $appMeta->buildDir; // /path/to/project/var/build/{context}
 
 // Optional path overrides (null keeps the defaults above):
 // new Meta($name, $context, $appDir, tmpDir: '/var/tmp/my-app', logDir: '/var/log/my-app');
 
 // An application that may not write in its own directory - a read-only image, an archive -
-// is placed under a writable base, and carries it:
+// is placed under a writable base:
 $appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appMeta->appDir, '/mnt/write');
 echo $appMeta->tmpDir;    // /mnt/write/MyVendor/HelloWorld/prod-app/tmp
-echo $appMeta->writeDir;  // /mnt/write
 
 // Environment reading belongs to the application, not Meta.
 ```
