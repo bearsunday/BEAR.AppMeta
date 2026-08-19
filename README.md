@@ -33,7 +33,7 @@ $appMeta = new Meta('MyVendor\HelloWorld');
 Pass `$appDir`, `$tmpDir` or `$logDir` to the constructor to override. `Meta::create()` takes a writable base for a read-only tree or an archive:
 
 ```php
-$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', Meta::appDir('MyVendor\HelloWorld'), '/mnt/write');
+$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appDir, '/mnt/write');
 ```
 
 Environment reading belongs to the application, not Meta.
