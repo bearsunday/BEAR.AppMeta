@@ -4,20 +4,29 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
+use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\Resource\ResourceObject;
 use Generator;
 use Koriym\Psr4List\Psr4List;
+use ReflectionClass;
 
 use function array_slice;
 use function array_walk;
 use function assert;
+use function class_exists;
+use function dirname;
 use function explode;
 use function implode;
 use function is_a;
 use function ltrim;
 use function preg_replace;
+use function realpath;
 use function sprintf;
+use function str_replace;
+use function str_starts_with;
+use function strlen;
 use function strtolower;
+use function substr;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -66,6 +75,66 @@ abstract class AbstractAppMeta
      * @deprecated Do not use.
      */
     public string|null $writeDir = null;
+
+    /**
+     * Re-point the paths under the application directory when it has moved or changed spelling.
+     *
+     * A serialized Meta was made on the build machine. Only paths below appDir go stale
+     * when the tree or archive moves; the rest (a writeDir base, a name-derived rule)
+     * is move-invariant by contract and left untouched.
+     */
+    public function __wakeup(): void
+    {
+        $appDir = self::appDir($this->name);
+        $from = str_replace('\\', '/', $this->appDir);
+        $to = str_replace('\\', '/', $appDir);
+        if ($from === $to) {
+            return;
+        }
+
+        foreach (['tmpDir', 'logDir', 'buildDir'] as $dir) {
+            /** @var string|null $path null only for 1.12 payloads, which carry no buildDir */
+            $path = $this->$dir ?? null;
+            if ($path === null) {
+                continue;
+            }
+
+            $path = str_replace('\\', '/', $path);
+            if (str_starts_with($path, $from . '/')) {
+                $this->$dir = $to . substr($path, strlen($from));
+            }
+        }
+
+        $this->appDir = $appDir;
+    }
+
+    /**
+     * The directory of an application, resolved from its AppModule.
+     *
+     * @param AppName $name
+     *
+     * @return AppDir the canonical spelling
+     *
+     * @throws AppNameException
+     */
+    public static function appDir(string $name): string
+    {
+        $module = $name . '\Module\AppModule';
+        if (! class_exists($module)) {
+            throw new AppNameException($name);
+        }
+
+        $fileName = (new ReflectionClass($module))->getFileName();
+        assert($fileName !== false, sprintf('Cannot locate AppModule file: %s', $module));
+
+        $dir = dirname($fileName, 3);
+        $real = realpath($dir);
+
+        /** @var AppDir $canonical */
+        $canonical = $real === false ? $dir : $real;
+
+        return $canonical;
+    }
 
     /** @return Generator<array{0: class-string<ResourceObject>, 1: FilePath}> */
     public function getResourceListGenerator(): Generator

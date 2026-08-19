@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
-use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\NotWritableException;
 use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
-use ReflectionClass;
 
-use function assert;
-use function class_exists;
-use function dirname;
 use function file_exists;
 use function is_dir;
 use function mkdir;
 use function preg_match;
+use function realpath;
 use function rtrim;
-use function sprintf;
 use function str_replace;
 
 /**
@@ -45,7 +40,7 @@ final class Meta extends AbstractAppMeta
         string|null $logDir = null,
     ) {
         $this->name = $name;
-        $this->appDir = $appDir !== '' ? $appDir : self::appDir($name);
+        $this->appDir = self::normalize($appDir !== '' ? $appDir : self::appDir($name));
         $this->buildDir = $this->appDir . '/var/build/' . $context;
         $this->tmpDir = self::ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
         $this->logDir = self::ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
@@ -70,11 +65,7 @@ final class Meta extends AbstractAppMeta
         }
 
         // A base the current directory resolves lands somewhere else on the next run
-        if (! preg_match('#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#', $writeDir)) {
-            throw new WriteDirNotAbsoluteException($writeDir);
-        }
-
-        assert($writeDir !== '');
+        self::assertAbsolute($writeDir);
 
         $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;
         $meta = new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
@@ -87,42 +78,40 @@ final class Meta extends AbstractAppMeta
     /**
      * @param non-empty-string $dir
      *
-     * @return non-empty-string
+     * @return non-empty-string the canonical spelling: one directory, one string
      */
     private static function ensureDir(string $dir): string
     {
         $dir = rtrim($dir, '/\\');
-        assert($dir !== '');
+        self::assertAbsolute($dir);
         if (! file_exists($dir) && ! @mkdir($dir, 0777, true) && ! is_dir($dir)) {
             throw new NotWritableException($dir);
         }
 
-        return $dir;
+        return self::normalize($dir);
+    }
+
+    /** @psalm-assert non-empty-string $dir */
+    private static function assertAbsolute(string $dir): void
+    {
+        if (! preg_match('#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#', $dir)) {
+            throw new WriteDirNotAbsoluteException($dir);
+        }
     }
 
     /**
-     * The directory of an application, resolved from its AppModule.
+     * @param non-empty-string $dir
      *
-     * @param AppName $name
-     *
-     * @return AppDir
-     *
-     * @throws AppNameException
+     * @return non-empty-string
      */
-    public static function appDir(string $name): string
+    private static function normalize(string $dir): string
     {
-        $module = $name . '\Module\AppModule';
-        if (! class_exists($module)) {
-            throw new AppNameException($name);
+        $real = realpath($dir);
+        if ($real === false) {
+            return $dir;
         }
 
-        $fileName = (new ReflectionClass($module))->getFileName();
-        assert($fileName !== false, sprintf('Cannot locate AppModule file: %s', $module));
-
-        /** @var AppDir $dir */
-        $dir = dirname($fileName, 3);
-        assert($dir !== '.');
-
-        return $dir;
+        /** @var non-empty-string $real */
+        return $real;
     }
 }
