@@ -111,8 +111,8 @@ class MetaTest extends TestCase
     {
         $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
         $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), $base);
-        $this->assertSame(realpath($base) . '/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
-        $this->assertSame(realpath($base) . '/FakeVendor/HelloWorld/prod-app/log', $meta->logDir);
+        $this->assertSame(realpath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $meta->tmpDir);
+        $this->assertSame(realpath($base . '/FakeVendor/HelloWorld/prod-app/log'), $meta->logDir);
         $this->assertDirectoryExists($meta->tmpDir);
         $this->assertDirectoryExists($meta->logDir);
     }
@@ -142,7 +142,7 @@ class MetaTest extends TestCase
         $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
         $appDir = Meta::appDir('FakeVendor\\HelloWorld');
         $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, $base);
-        $this->assertSame(realpath($base) . '/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
+        $this->assertSame(realpath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $meta->tmpDir);
         $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($meta->buildDir));
     }
 
@@ -207,10 +207,10 @@ class MetaTest extends TestCase
         $woke = unserialize(serialize($meta));
         assert($woke instanceof Meta);
         $appDir = Meta::appDir('FakeVendor\\HelloWorld');
-        $this->assertSame($appDir, $woke->appDir);
-        $this->assertSame($appDir . '/var/tmp/prod-app', $woke->tmpDir);
-        $this->assertSame($appDir . '/var/log/prod-app', $woke->logDir);
-        $this->assertSame($appDir . '/var/build/prod-app', $woke->buildDir);
+        $this->assertSame($this->normalizePath($appDir), $this->normalizePath($woke->appDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/tmp/prod-app'), $this->normalizePath($woke->tmpDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/log/prod-app'), $this->normalizePath($woke->logDir));
+        $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($woke->buildDir));
     }
 
     public function testWakeupKeepsPathsOutsideTheAppDir(): void
@@ -222,10 +222,11 @@ class MetaTest extends TestCase
         $meta->buildDir = '/build/machine/app/var/build/prod-app';
 
         $meta->__wakeup();
-        $this->assertSame(Meta::appDir('FakeVendor\\HelloWorld'), $meta->appDir);
+        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
+        $this->assertSame($this->normalizePath($appDir), $this->normalizePath($meta->appDir));
         $this->assertSame('/write/FakeVendor/HelloWorld/prod-app/tmp', $meta->tmpDir);
         $this->assertSame('/logs/FakeVendor/HelloWorld', $meta->logDir);
-        $this->assertSame(Meta::appDir('FakeVendor\\HelloWorld') . '/var/build/prod-app', $meta->buildDir);
+        $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($meta->buildDir));
     }
 
     public function testWakeupIsQuietWhenTheApplicationHasNotMoved(): void

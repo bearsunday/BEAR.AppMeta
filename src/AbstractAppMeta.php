@@ -85,9 +85,9 @@ abstract class AbstractAppMeta
      */
     public function __wakeup(): void
     {
-        $appDir = self::appDir($this->name);
         $from = str_replace('\\', '/', $this->appDir);
-        $to = str_replace('\\', '/', $appDir);
+        /** @var AppDir $to rebased paths spell forward-slashed, whatever the platform */
+        $to = str_replace('\\', '/', self::appDir($this->name));
         if ($from === $to) {
             return;
         }
@@ -105,7 +105,7 @@ abstract class AbstractAppMeta
             }
         }
 
-        $this->appDir = $appDir;
+        $this->appDir = $to;
     }
 
     /**
