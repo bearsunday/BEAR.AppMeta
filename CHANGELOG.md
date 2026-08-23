@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- `Meta` creates no directory: constructing one against a read-only tree or a phar no longer throws
+- `$tmpDir` and `$logDir` keep the spelling they were given, so it no longer depends on whether the directory exists yet
+
 ## [1.13.0] - 2026-08-19
 
 ### Added

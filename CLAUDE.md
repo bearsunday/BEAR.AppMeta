@@ -10,7 +10,7 @@ BEAR.AppMeta is a lightweight PHP library that manages application metadata for 
 
 ### Main Classes
 
-- **Meta** (`src/Meta.php`): The primary entry point. Accepts an application name (Vendor\Project format), optional context (e.g., 'prod-hal-app'), and optional appDir. Automatically creates var/tmp and var/log directories under the appDir.
+- **Meta** (`src/Meta.php`): The primary entry point. Accepts an application name (Vendor\Project format), optional context (e.g., 'prod-hal-app'), and optional appDir. Reports where the application writes; it creates nothing.
 
 - **AbstractAppMeta** (`src/AbstractAppMeta.php`): Base class containing:
   - `getResourceListGenerator()`: Returns a generator yielding [class, file] pairs for all ResourceObject classes
@@ -89,7 +89,7 @@ To run a specific test method:
 - Tests verify:
   - Resource discovery via getResourceListGenerator()
   - URI generation with different schemes
-  - Automatic directory creation in var/tmp and var/log
+  - That construction touches no filesystem
   - Path normalization across platforms (Windows/Unix)
 
 ## Type Safety and Domain Types

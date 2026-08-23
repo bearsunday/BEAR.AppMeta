@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
-use BEAR\AppMeta\Exception\NotWritableException;
 use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 
-use function file_exists;
-use function is_dir;
-use function mkdir;
 use function preg_match;
 use function realpath;
 use function rtrim;
@@ -45,8 +41,8 @@ final class Meta extends AbstractAppMeta
         self::assertAbsolute($appDir);
         $this->appDir = self::normalize($appDir);
         $this->buildDir = $this->appDir . '/var/build/' . $context;
-        $this->tmpDir = self::ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
-        $this->logDir = self::ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
+        $this->tmpDir = self::absoluteDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
+        $this->logDir = self::absoluteDir($logDir ?? $this->appDir . '/var/log/' . $context);
     }
 
     /**
@@ -79,19 +75,19 @@ final class Meta extends AbstractAppMeta
     }
 
     /**
+     * The spelling as given, not resolved: realpath() answers only for a directory that exists,
+     * and a compile marker compares these as strings.
+     *
      * @param non-empty-string $dir
      *
-     * @return non-empty-string the canonical spelling: one directory, one string
+     * @return non-empty-string
      */
-    private static function ensureDir(string $dir): string
+    private static function absoluteDir(string $dir): string
     {
         $dir = rtrim($dir, '/\\');
         self::assertAbsolute($dir);
-        if (! file_exists($dir) && ! @mkdir($dir, 0777, true) && ! is_dir($dir)) {
-            throw new NotWritableException($dir);
-        }
 
-        return self::normalize($dir);
+        return $dir;
     }
 
     /** @psalm-assert non-empty-string $dir */

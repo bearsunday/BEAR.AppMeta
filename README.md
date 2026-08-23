@@ -36,6 +36,8 @@ Pass `$appDir`, `$tmpDir` or `$logDir` to the constructor to override. `Meta::cr
 $appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appDir, '/mnt/write');
 ```
 
+A `Meta` says where the application writes; it creates nothing, so constructing one against a read-only tree or a phar is fine. Whoever writes to a directory creates it.
+
 Environment reading belongs to the application, not Meta.
 
 ### Libraries: take paths from the injected Meta
