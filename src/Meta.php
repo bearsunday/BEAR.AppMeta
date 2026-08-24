@@ -21,6 +21,9 @@ use function str_replace;
  */
 final class Meta extends AbstractAppMeta
 {
+    /** A leading slash, a UNC share, a drive letter, or a stream scheme. */
+    private const ABSOLUTE = '#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#';
+
     /**
      * @param AppName     $name    application name      (Vendor\Project)
      * @param Context     $context application context   (prod-hal-app)
@@ -78,19 +81,32 @@ final class Meta extends AbstractAppMeta
      * The spelling as given, not resolved: realpath() answers only for a directory that exists,
      * and a compile marker compares these as strings.
      *
-     * @param non-empty-string $dir
-     *
      * @return non-empty-string
+     *
+     * @throws WriteDirNotAbsoluteException
      */
     private static function absoluteDir(string $dir): string
     {
-        $dir = rtrim($dir, '/\\');
         self::assertAbsolute($dir);
+        $trimmed = rtrim($dir, '/\\');
 
-        return $dir;
+        // One directory, one spelling - except at a root, which is all separator.
+        return self::isAbsolute($trimmed) ? $trimmed : $dir;
     }
 
-    /** @psalm-assert non-empty-string $dir */
+    /**
+     * @psalm-assert-if-true non-empty-string $dir
+     * @phpstan-assert-if-true non-empty-string $dir
+     */
+    private static function isAbsolute(string $dir): bool
+    {
+        return (bool) preg_match(self::ABSOLUTE, $dir);
+    }
+
+    /**
+     * @psalm-assert non-empty-string $dir
+     * @phpstan-assert non-empty-string $dir
+     */
     private static function assertAbsolute(string $dir): void
     {
         if (! preg_match('#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#', $dir)) {
