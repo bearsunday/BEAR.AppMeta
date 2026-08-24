@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
+use BEAR\AppMeta\Exception\AppDirNotAbsoluteException;
 use BEAR\AppMeta\Exception\AppNameException;
 use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use FakeVendor\HelloWorld\Resource\App\One;
@@ -276,7 +277,7 @@ class MetaTest extends TestCase
 
     public function testRefusesAnAppDirThatIsNotAbsolute(): void
     {
-        $this->expectException(WriteDirNotAbsoluteException::class);
+        $this->expectException(AppDirNotAbsoluteException::class);
         new Meta('FakeVendor\\HelloWorld', 'prod-app', 'relative/app', sys_get_temp_dir() . '/bear-tmp-' . uniqid(), sys_get_temp_dir() . '/bear-log-' . uniqid());
     }
 
