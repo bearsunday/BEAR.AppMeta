@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - `Meta` creates no directory: constructing one against a read-only tree or a phar no longer throws
 - `$tmpDir` and `$logDir` keep the spelling they were given, so it no longer depends on whether the directory exists yet
+- `$tmpDir` and `$logDir` are not created, so whoever writes to one creates it
+
+### Removed
+- The relative-path refusal on `$tmpDir` and `$logDir` (1.13.0): every caller validates before `Meta`, and `$appDir` is still refused
 
 ## [1.13.0] - 2026-08-19
 

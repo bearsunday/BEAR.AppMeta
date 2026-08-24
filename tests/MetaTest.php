@@ -280,17 +280,6 @@ class MetaTest extends TestCase
         new Meta('FakeVendor\\HelloWorld', 'prod-app', 'relative/app', sys_get_temp_dir() . '/bear-tmp-' . uniqid(), sys_get_temp_dir() . '/bear-log-' . uniqid());
     }
 
-    /**
-     * @dataProvider baseThatTheCurrentDirectoryResolves
-     * @psalm-suppress InvalidArgument the point is passing an unusable dir
-     */
-    public function testRefusesATmpDirThatIsNotAbsolute(string $tmpDir): void
-    {
-        $this->expectException(WriteDirNotAbsoluteException::class);
-        // @phpstan-ignore argument.type (the point is passing an unusable dir)
-        new Meta('FakeVendor\\HelloWorld', 'prod-app', '', $tmpDir);
-    }
-
     public function testAppDirResolvesFromTheAppModule(): void
     {
         $this->assertSame($this->meta->appDir, Meta::appDir('FakeVendor\\HelloWorld'));

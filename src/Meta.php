@@ -44,8 +44,8 @@ final class Meta extends AbstractAppMeta
         self::assertAbsolute($appDir);
         $this->appDir = self::normalize($appDir);
         $this->buildDir = $this->appDir . '/var/build/' . $context;
-        $this->tmpDir = self::absoluteDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
-        $this->logDir = self::absoluteDir($logDir ?? $this->appDir . '/var/log/' . $context);
+        $this->tmpDir = $tmpDir ?? $this->appDir . '/var/tmp/' . $context;
+        $this->logDir = $logDir ?? $this->appDir . '/var/log/' . $context;
     }
 
     /**
@@ -78,38 +78,12 @@ final class Meta extends AbstractAppMeta
     }
 
     /**
-     * The spelling as given, not resolved: realpath() answers only for a directory that exists,
-     * and a compile marker compares these as strings.
-     *
-     * @return non-empty-string
-     *
-     * @throws WriteDirNotAbsoluteException
-     */
-    private static function absoluteDir(string $dir): string
-    {
-        self::assertAbsolute($dir);
-        $trimmed = rtrim($dir, '/\\');
-
-        // One directory, one spelling - except at a root, which is all separator.
-        return self::isAbsolute($trimmed) ? $trimmed : $dir;
-    }
-
-    /**
-     * @psalm-assert-if-true non-empty-string $dir
-     * @phpstan-assert-if-true non-empty-string $dir
-     */
-    private static function isAbsolute(string $dir): bool
-    {
-        return (bool) preg_match(self::ABSOLUTE, $dir);
-    }
-
-    /**
      * @psalm-assert non-empty-string $dir
      * @phpstan-assert non-empty-string $dir
      */
     private static function assertAbsolute(string $dir): void
     {
-        if (! preg_match('#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#', $dir)) {
+        if (! preg_match(self::ABSOLUTE, $dir)) {
             throw new WriteDirNotAbsoluteException($dir);
         }
     }
