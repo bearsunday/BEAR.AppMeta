@@ -13,7 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `$tmpDir` and `$logDir` are not created, so whoever writes to one creates it
 
 ### Removed
-- The relative-path refusal on `$appDir`, `$tmpDir` and `$logDir` (1.13.0), with `WriteDirNotAbsoluteException` for the two write directories: no caller can name a relative one - an application directory arrives from `__DIR__` or from `appDir()`, and `Meta::create()` still refuses a relative base
+- `Meta::create()`, `$writeDir` and `WriteDirNotAbsoluteException` (1.12.0): a base to place an application under, read from the environment at every entry point. The constructor takes the two directories instead, and an application names them itself
+- The relative-path refusal on `$appDir`, `$tmpDir` and `$logDir` (1.13.0): no caller can name a relative one - an application directory arrives from `__DIR__` or from `appDir()`, and the write directories are the caller's to validate
 
 ## [1.13.0] - 2026-08-19
 

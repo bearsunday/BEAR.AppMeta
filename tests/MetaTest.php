@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace BEAR\AppMeta;
 
 use BEAR\AppMeta\Exception\AppNameException;
-use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 use FakeVendor\HelloWorld\Resource\App\One;
 use FakeVendor\HelloWorld\Resource\App\Sub\Sub\Four;
 use FakeVendor\HelloWorld\Resource\App\Sub\Three;
@@ -110,41 +109,10 @@ class MetaTest extends TestCase
         $this->assertSame($logDir, $meta->logDir);
     }
 
-    public function testCreateWritesUnderTheGivenBase(): void
-    {
-        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
-        $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), $base);
-        $this->assertSame($this->normalizePath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $this->normalizePath($meta->tmpDir));
-        $this->assertSame($this->normalizePath($base . '/FakeVendor/HelloWorld/prod-app/log'), $this->normalizePath($meta->logDir));
-    }
-
-    public function testCreateCarriesTheBaseItWasGiven(): void
-    {
-        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
-        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
-        $this->assertSame($base, Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, $base)->writeDir);
-        $this->assertNull(Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, null)->writeDir);
-    }
-
-    public function testCreateWithoutBaseWritesInItsOwnVar(): void
-    {
-        $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), null);
-        $this->assertSame($this->normalizePath($meta->appDir . '/var/tmp/prod-app'), $this->normalizePath($meta->tmpDir));
-    }
-
     public function testBuildDirIsUnderTheApplication(): void
     {
         $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app');
         $this->assertSame($this->normalizePath($meta->appDir . '/var/build/prod-app'), $this->normalizePath($meta->buildDir));
-    }
-
-    public function testBuildDirStaysUnderTheApplicationWhenTmpAndLogFollowTheBase(): void
-    {
-        $base = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'bear-write-dir-' . uniqid();
-        $appDir = Meta::appDir('FakeVendor\\HelloWorld');
-        $meta = Meta::create('FakeVendor\\HelloWorld', 'prod-app', $appDir, $base);
-        $this->assertSame($this->normalizePath($base . '/FakeVendor/HelloWorld/prod-app/tmp'), $this->normalizePath($meta->tmpDir));
-        $this->assertSame($this->normalizePath($appDir . '/var/build/prod-app'), $this->normalizePath($meta->buildDir));
     }
 
     public function testBuildDirSeparatesContexts(): void
@@ -176,19 +144,6 @@ class MetaTest extends TestCase
         }
     }
 
-    /** @dataProvider baseThatTheCurrentDirectoryResolves */
-    public function testCreateRefusesABaseThatIsNotAbsolute(string $base): void
-    {
-        $this->expectException(WriteDirNotAbsoluteException::class);
-        Meta::create('FakeVendor\\HelloWorld', 'prod-app', Meta::appDir('FakeVendor\\HelloWorld'), $base);
-    }
-
-    /** @return array<string, array{0: string}> */
-    public static function baseThatTheCurrentDirectoryResolves(): array
-    {
-        return ['empty' => [''], 'relative' => ['var/write'], 'dot' => ['./write']];
-    }
-
     public function testUnserializeRelocatesPathsUnderTheAppDir(): void
     {
         $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app');
@@ -209,14 +164,13 @@ class MetaTest extends TestCase
 
     public function testUnserializeAcceptsAPayloadWithoutBuildDir(): void
     {
-        // what 1.12 baked: five fields, no buildDir
         $field = static fn (string $key, string $value): string => sprintf('s:%d:"%s";s:%d:"%s";', strlen($key), $key, strlen($value), $value);
-        $payload = 'O:17:"BEAR\\AppMeta\\Meta":5:{'
+        $payload = 'O:17:"BEAR\\AppMeta\\Meta":4:{'
             . $field('name', 'FakeVendor\\HelloWorld')
             . $field('appDir', '/build/machine/app')
             . $field('tmpDir', '/build/machine/app/var/tmp/prod-app')
             . $field('logDir', '/build/machine/app/var/log/prod-app')
-            . 's:8:"writeDir";N;}';
+            . '}';
 
         $woke = unserialize($payload);
         assert($woke instanceof Meta);
@@ -229,7 +183,7 @@ class MetaTest extends TestCase
     {
         $meta = new Meta('FakeVendor\\HelloWorld', 'prod-app');
         $meta->appDir = '/build/machine/app';
-        $meta->tmpDir = '/write/FakeVendor/HelloWorld/prod-app/tmp'; // writeDir-derived: move-invariant
+        $meta->tmpDir = '/write/FakeVendor/HelloWorld/prod-app/tmp'; // declared outside the tree: move-invariant
         $meta->logDir = '/logs/FakeVendor/HelloWorld'; // a custom rule: move-invariant
         $meta->buildDir = '/build/machine/app/var/build/prod-app';
 

@@ -16,7 +16,6 @@ namespace BEAR\AppMeta;
  * @psalm-type TmpDir = non-empty-string
  * @psalm-type LogDir = non-empty-string
  * @psalm-type BuildDir = non-empty-string
- * @psalm-type WriteDir = non-empty-string
  * @psalm-type UriPath = non-empty-string
  * @psalm-type FilePath = non-empty-string
  * @psalm-type Scheme = 'app'|'page'|'*'
