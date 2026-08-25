@@ -36,7 +36,6 @@ use const DIRECTORY_SEPARATOR;
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
  * @psalm-import-type BuildDir from Types
- * @psalm-import-type WriteDir from Types
  * @psalm-import-type UriPath from Types
  * @psalm-import-type FilePath from Types
  * @psalm-import-type Scheme from Types
@@ -71,17 +70,11 @@ abstract class AbstractAppMeta
     public string $buildDir;
 
     /**
-     * @var WriteDir|null
-     * @deprecated Do not use.
-     */
-    public string|null $writeDir = null;
-
-    /**
      * Re-point the paths under the application directory when it has moved or changed spelling.
      *
      * A serialized Meta was made on the build machine. Only paths below appDir go stale
-     * when the tree or archive moves; the rest (a writeDir base, a name-derived rule)
-     * is move-invariant by contract and left untouched.
+     * when the tree or archive moves; a directory named outside it is the declaration's,
+     * and left untouched.
      */
     public function __wakeup(): void
     {

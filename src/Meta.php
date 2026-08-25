@@ -4,16 +4,7 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
-use BEAR\AppMeta\Exception\NotWritableException;
-use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
-
-use function file_exists;
-use function is_dir;
-use function mkdir;
-use function preg_match;
 use function realpath;
-use function rtrim;
-use function str_replace;
 
 /**
  * @psalm-import-type AppName from Types
@@ -21,7 +12,6 @@ use function str_replace;
  * @psalm-import-type AppDir from Types
  * @psalm-import-type TmpDir from Types
  * @psalm-import-type LogDir from Types
- * @psalm-import-type WriteDir from Types
  */
 final class Meta extends AbstractAppMeta
 {
@@ -41,65 +31,11 @@ final class Meta extends AbstractAppMeta
     ) {
         $this->name = $name;
         $appDir = $appDir !== '' ? $appDir : self::appDir($name);
-        // @phpstan-ignore staticMethod.alreadyNarrowedType (the regex check runs at runtime regardless of the type)
-        self::assertAbsolute($appDir);
+
         $this->appDir = self::normalize($appDir);
         $this->buildDir = $this->appDir . '/var/build/' . $context;
-        $this->tmpDir = self::ensureDir($tmpDir ?? $this->appDir . '/var/tmp/' . $context);
-        $this->logDir = self::ensureDir($logDir ?? $this->appDir . '/var/log/' . $context);
-    }
-
-    /**
-     * Meta writing under {writeDir}/{Vendor}/{Project}/{context}, or its own var/ when null.
-     *
-     * A boot must pass what the compile passed: differ on any argument and they read different files.
-     *
-     * @param AppName     $name
-     * @param Context     $context
-     * @param AppDir      $appDir
-     * @param string|null $writeDir absolute base, checked here; where it lies is the caller's business
-     *
-     * @throws WriteDirNotAbsoluteException
-     */
-    public static function create(string $name, string $context, string $appDir, string|null $writeDir): self
-    {
-        if ($writeDir === null) {
-            return new self($name, $context, $appDir);
-        }
-
-        // A base the current directory resolves lands somewhere else on the next run
-        self::assertAbsolute($writeDir);
-
-        $base = rtrim($writeDir, '/\\') . '/' . str_replace('\\', '/', $name) . '/' . $context;
-        $meta = new self($name, $context, $appDir, $base . '/tmp', $base . '/log');
-        /** @psalm-suppress DeprecatedProperty the factory still fills what releases read */
-        $meta->writeDir = $writeDir;
-
-        return $meta;
-    }
-
-    /**
-     * @param non-empty-string $dir
-     *
-     * @return non-empty-string the canonical spelling: one directory, one string
-     */
-    private static function ensureDir(string $dir): string
-    {
-        $dir = rtrim($dir, '/\\');
-        self::assertAbsolute($dir);
-        if (! file_exists($dir) && ! @mkdir($dir, 0777, true) && ! is_dir($dir)) {
-            throw new NotWritableException($dir);
-        }
-
-        return self::normalize($dir);
-    }
-
-    /** @psalm-assert non-empty-string $dir */
-    private static function assertAbsolute(string $dir): void
-    {
-        if (! preg_match('#^(/|\\\\\\\\|[A-Za-z]:[/\\\\]|[A-Za-z][A-Za-z0-9+.\-]*://)#', $dir)) {
-            throw new WriteDirNotAbsoluteException($dir);
-        }
+        $this->tmpDir = $tmpDir ?? $this->appDir . '/var/tmp/' . $context;
+        $this->logDir = $logDir ?? $this->appDir . '/var/log/' . $context;
     }
 
     /**

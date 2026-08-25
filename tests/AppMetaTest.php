@@ -13,7 +13,6 @@ use function chmod;
 use function dirname;
 use function file_put_contents;
 use function str_replace;
-use function var_dump;
 
 use const DIRECTORY_SEPARATOR;
 use const PHP_OS_FAMILY;
@@ -48,7 +47,7 @@ class AppMetaTest extends TestCase
     {
         $actual = $this->appMeta;
         $this->assertInstanceOf(Meta::class, $actual);
-        $this->assertFileExists($this->appMeta->tmpDir);
+        $this->assertSame($actual->appDir . '/var/tmp/prod-app', $actual->tmpDir);
     }
 
     public function testInvalidName(): void
@@ -59,20 +58,12 @@ class AppMetaTest extends TestCase
 
     public function testNotWritable(): void
     {
-        var_dump(PHP_OS_FAMILY);
         if (PHP_OS_FAMILY === 'Windows') {
             $this->markTestSkipped('Skipping write-protected test on Windows.');
         }
 
         $this->expectException(NotWritableException::class);
-        new Meta('FakeVendor\NotWritable');
-    }
-
-    public function testVarTmpFolderCreation(): void
-    {
-        new Meta('FakeVendor\HelloWorld', 'stage-app');
-        $this->assertFileExists(__DIR__ . $this->normalizePath('/Fake/fake-app/var/log/stage-app'));
-        $this->assertFileExists(__DIR__ . $this->normalizePath('/Fake/fake-app/var/tmp/stage-app'));
+        new AppMeta('FakeVendor\NotWritable');
     }
 
     public function testDoNotClear(): void

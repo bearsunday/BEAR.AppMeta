@@ -30,11 +30,13 @@ $appMeta = new Meta('MyVendor\HelloWorld');
 - `logDir` — log files
 - `buildDir` — artifacts a build generates once and every run reads (compiled DI scripts, templates)
 
-Pass `$appDir`, `$tmpDir` or `$logDir` to the constructor to override. `Meta::create()` takes a writable base for a read-only tree or an archive:
+Pass `$appDir`, `$tmpDir` or `$logDir` to the constructor to override:
 
 ```php
-$appMeta = Meta::create('MyVendor\HelloWorld', 'prod-app', $appDir, '/mnt/write');
+$appMeta = new Meta('MyVendor\HelloWorld', 'prod-app', $appDir, '/mnt/write/tmp', '/mnt/write/log');
 ```
+
+A `Meta` says where the application writes; it creates nothing, so constructing one against a read-only tree or a phar is fine. Whoever writes to a directory creates it.
 
 Environment reading belongs to the application, not Meta.
 
