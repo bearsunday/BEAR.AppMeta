@@ -11,10 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Meta` creates no directory: constructing one against a read-only tree or a phar no longer throws
 - `$tmpDir` and `$logDir` keep the spelling they were given, so it no longer depends on whether the directory exists yet
 - `$tmpDir` and `$logDir` are not created, so whoever writes to one creates it
-- A relative `$appDir` throws `AppDirNotAbsoluteException`, not `WriteDirNotAbsoluteException` (1.13.0): where the application is, is not where it writes
 
 ### Removed
-- The relative-path refusal on `$tmpDir` and `$logDir` (1.13.0): every caller validates before `Meta`, and `$appDir` is still refused
+- The relative-path refusal on `$appDir`, `$tmpDir` and `$logDir` (1.13.0), with `WriteDirNotAbsoluteException` for the two write directories: no caller can name a relative one - an application directory arrives from `__DIR__` or from `appDir()`, and `Meta::create()` still refuses a relative base
 
 ## [1.13.0] - 2026-08-19
 

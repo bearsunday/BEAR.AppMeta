@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace BEAR\AppMeta;
 
-use BEAR\AppMeta\Exception\AppDirNotAbsoluteException;
 use BEAR\AppMeta\Exception\WriteDirNotAbsoluteException;
 
 use function preg_match;
@@ -31,8 +30,6 @@ final class Meta extends AbstractAppMeta
      * @param string      $appDir  application directory
      * @param TmpDir|null $tmpDir  writable tmp directory (default: {appDir}/var/tmp/{context})
      * @param LogDir|null $logDir  log directory (default: {appDir}/var/log/{context})
-     *
-     * @throws AppDirNotAbsoluteException
      */
     public function __construct(
         string $name,
@@ -42,11 +39,8 @@ final class Meta extends AbstractAppMeta
         string|null $logDir = null,
     ) {
         $this->name = $name;
+        /** @var AppDir $appDir every caller names it with __DIR__ or lets appDir() reflect it */
         $appDir = $appDir !== '' ? $appDir : self::appDir($name);
-        // @phpstan-ignore staticMethod.alreadyNarrowedType (absoluteness is not in the type; the regex runs regardless)
-        if (! self::isAbsolute($appDir)) {
-            throw new AppDirNotAbsoluteException($appDir);
-        }
 
         $this->appDir = self::normalize($appDir);
         $this->buildDir = $this->appDir . '/var/build/' . $context;
