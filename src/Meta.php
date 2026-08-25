@@ -39,7 +39,6 @@ final class Meta extends AbstractAppMeta
         string|null $logDir = null,
     ) {
         $this->name = $name;
-        /** @var AppDir $appDir every caller names it with __DIR__ or lets appDir() reflect it */
         $appDir = $appDir !== '' ? $appDir : self::appDir($name);
 
         $this->appDir = self::normalize($appDir);
