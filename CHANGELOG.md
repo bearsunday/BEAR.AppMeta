@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - `Meta::create()`, `$writeDir` and `WriteDirNotAbsoluteException` (1.12.0): a base to place an application under, read from the environment at every entry point. The constructor takes the two directories instead, and an application names them itself
+- A Meta serialized by 1.12 or 1.13 carries a `writeDir` field this class no longer declares: unserialize() makes it a dynamic property and PHP 8.2+ says so. Compiled scripts from those releases are not read by BEAR.Package 1.24, which moved the script directory in the same release; a payload stored by hand needs writing again
 - The relative-path refusal on `$appDir`, `$tmpDir` and `$logDir` (1.13.0): no caller can name a relative one - an application directory arrives from `__DIR__` or from `appDir()`, and the write directories are the caller's to validate
 
 ## [1.13.0] - 2026-08-19
