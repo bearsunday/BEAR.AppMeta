@@ -7,15 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.0] - 2026-08-25
+
 ### Changed
-- `Meta` creates no directory: constructing one against a read-only tree or a phar no longer throws
-- `$tmpDir` and `$logDir` keep the spelling they were given, so it no longer depends on whether the directory exists yet
-- `$tmpDir` and `$logDir` are not created, so whoever writes to one creates it
+- `Meta` creates no directory, so constructing one against a read-only tree or a phar is fine and whoever writes to a directory creates it
+- `$tmpDir` and `$logDir` keep the spelling they were given, whether or not the directory exists
 
 ### Removed
-- `Meta::create()`, `$writeDir` and `WriteDirNotAbsoluteException` (1.12.0): a base to place an application under, read from the environment at every entry point. The constructor takes the two directories instead, and an application names them itself
-- A Meta serialized by 1.12 or 1.13 carries a `writeDir` field this class no longer declares: unserialize() makes it a dynamic property and PHP 8.2+ says so. Compiled scripts from those releases are not read by BEAR.Package 1.24, which moved the script directory in the same release; a payload stored by hand needs writing again
-- The relative-path refusal on `$appDir`, `$tmpDir` and `$logDir` (1.13.0): no caller can name a relative one - an application directory arrives from `__DIR__` or from `appDir()`, and the write directories are the caller's to validate
+- `Meta::create()`, `$writeDir` and `WriteDirNotAbsoluteException` (1.12.0): an application names its own directories through the constructor
+- A `Meta` serialized by 1.12 or 1.13 carries a `writeDir` this class no longer declares - recompile rather than unserialize one
+- The relative-path refusal on `$appDir`, `$tmpDir` and `$logDir` (1.13.0): no caller can name a relative one
 
 ## [1.13.0] - 2026-08-19
 
@@ -74,6 +75,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Windows path separator issues in tests
 - Add descriptive assert messages for better debugging
 
+[1.14.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.13.0...1.14.0
 [1.13.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.12.0...1.13.0
 [1.11.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.10.0...1.11.0
 [1.10.0]: https://github.com/bearsunday/BEAR.AppMeta/compare/1.9.0...1.10.0
